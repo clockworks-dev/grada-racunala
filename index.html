@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="slides-format" content="viewport">
+  <title>Vrste računala i unutarnji dijelovi računala</title>
+  <style>
+    :root {
+      --bg: #071425;
+      --bg2: #0c2340;
+      --panel: rgba(13, 35, 62, .80);
+      --panel-light: rgba(255, 255, 255, .10);
+      --line: rgba(172, 225, 255, .21);
+      --text: #eff9ff;
+      --muted: #b7cce1;
+      --cyan: #5ee7f7;
+      --violet: #a78bfa;
+      --gold: #facc6b;
+      --green: #65dfb0;
+      --danger: #ff9aa8;
+      --shadow: 0 22px 70px rgba(0, 0, 0, .35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(18px, 4vw, 56px) clamp(18px, 6vw, 92px) 100px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(26px) scale(.985);
+      transition: opacity .42s ease, transform .42s ease;
+      overflow: auto;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(94, 231, 247, .18), transparent 26%),
+        radial-gradient(circle at 88% 20%, rgba(167, 139, 250, .20), transparent 24%),
+        radial-gradient(circle at 66% 94%, rgba(250, 204, 107, .13), transparent 30%),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0) scale(1);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .16;
+      background-image: radial-gradient(rgba(255, 255, 255, .45) .55px, transparent .7px);
+      background-size: 17px 17px;
+      mask-image: linear-gradient(to bottom, black, transparent);
+    }
+
+    .content {
+      width: min(1180px, 100%);
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--cyan);
+      font-size: .82rem;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 18px currentColor;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      line-height: .96;
+      max-width: 13ch;
+      margin: 18px 0;
+      letter-spacing: -.055em;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4.5vw, 4rem);
+      line-height: 1.02;
+      margin: 12px 0 28px;
+      letter-spacing: -.045em;
+    }
+
+    h3 {
+      font-size: clamp(1.1rem, 1.8vw, 1.48rem);
+      margin-bottom: 9px;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(1.04rem, 1.7vw, 1.38rem);
+      line-height: 1.65;
+      max-width: 63ch;
+    }
+
+    .grid {
+      display: grid;
+      gap: clamp(14px, 2vw, 24px);
+    }
+
+    .two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .hero-grid {
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: end;
+      margin-top: 34px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      border-radius: 26px;
+      padding: clamp(18px, 2.6vw, 30px);
+    }
+
+    .card p,
+    li {
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(94, 231, 247, .20), rgba(167, 139, 250, .19));
+      font-size: 1.85rem;
+      margin-bottom: 18px;
+    }
+
+    .mini {
+      color: var(--cyan);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      font-size: .75rem;
+    }
+
+    .accent {
+      color: var(--cyan);
+    }
+
+    .violet {
+      color: var(--violet);
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    .green {
+      color: var(--green);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .chip {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .07);
+      color: var(--text);
+      border-radius: 999px;
+      font-size: .9rem;
+      font-weight: 650;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .flow-item {
+      min-height: 136px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+    }
+
+    .flow-item .big {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    .arrow {
+      text-align: center;
+      color: var(--cyan);
+      font-size: 1.8rem;
+    }
+
+    .compare {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    .compare th,
+    .compare td {
+      text-align: left;
+      padding: 15px 17px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    .compare th {
+      color: var(--cyan);
+      background: rgba(94, 231, 247, .08);
+      font-size: .9rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .compare td {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .compare tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .list {
+      margin: 0;
+      padding-left: 1.2rem;
+      display: grid;
+      gap: 10px;
+      font-size: clamp(.98rem, 1.4vw, 1.16rem);
+    }
+
+    .quiz-option {
+      width: 100%;
+      padding: 15px 17px;
+      color: var(--text);
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .07);
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .quiz-option:hover,
+    .quiz-option:focus-visible {
+      background: rgba(94, 231, 247, .15);
+      border-color: var(--cyan);
+      outline: none;
+    }
+
+    .quiz-option.correct {
+      border-color: var(--green);
+      background: rgba(101, 223, 176, .18);
+    }
+
+    .quiz-option.wrong {
+      border-color: var(--danger);
+      background: rgba(255, 154, 168, .15);
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .callout {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--gold);
+      background: rgba(250, 204, 107, .10);
+      color: #f6e8bc;
+      border-radius: 0 15px 15px 0;
+      line-height: 1.55;
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 5;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(7, 20, 37, .78);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      backdrop-filter: blur(15px);
+      box-shadow: var(--shadow);
+    }
+
+    .nav button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--text);
+      background: rgba(255, 255, 255, .08);
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .nav button:hover,
+    .nav button:focus-visible {
+      background: rgba(94, 231, 247, .22);
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    .counter {
+      min-width: 52px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 750;
+    }
+
+    .progress {
+      position: fixed;
+      z-index: 6;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--gold));
+      transition: width .35s;
+    }
+
+    .hint {
+      position: fixed;
+      right: 20px;
+      bottom: 28px;
+      z-index: 4;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .component-diagram {
+      display: grid;
+      grid-template-columns: .95fr 1.1fr .95fr;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .diagram-node {
+      padding: 19px;
+      text-align: center;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .08);
+      font-weight: 800;
+    }
+
+    .diagram-node span {
+      display: block;
+      margin-top: 6px;
+      font-size: .87rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    @media (max-width: 820px) {
+
+      .two,
+      .three,
+      .four,
+      .hero-grid,
+      .component-diagram {
+        grid-template-columns: 1fr;
+      }
+
+      .flow {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .arrow {
+        display: none;
+      }
+
+      .slide {
+        align-items: start;
+        padding-top: 34px;
+      }
+
+      .hint {
+        display: none;
+      }
+
+      h1 {
+        max-width: 100%;
+      }
+
+      .compare {
+        font-size: .83rem;
+      }
+
+      .compare th,
+      .compare td {
+        padding: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="progress" id="progress"></div>
+  <main class="deck" aria-label="Prezentacija: vrste računala i unutarnji dijelovi računala">
+
+    <section class="slide active" aria-labelledby="s1">
+      <div class="content">
+        <div class="eyebrow">Informatika · nastavni materijal</div>
+        <h1 id="s1">Vrste računala i njihovi unutarnji dijelovi</h1>
+        <p class="lead">Od računala u džepu do superračunala — upoznaj podjelu računalnih sustava i komponente koje
+          omogućuju njihov rad.</p>
+        <div class="grid hero-grid">
+          <div class="card">
+            <div class="mini">Cjelina 1</div>
+            <h3>Vrste računala</h3>
+            <p>Podjela prema namjeni i veličini, osobna i prijenosna računala te procesna računala.</p>
+          </div>
+          <div class="card">
+            <div class="mini">Cjelina 2</div>
+            <h3>Unutarnji dijelovi</h3>
+            <p>Matična ploča, procesor, RAM, pohrana, grafika, zvuk, napajanje i hlađenje.</p>
+          </div>
+          <div class="card">
+            <div class="mini">Cilj</div>
+            <h3>Poveži funkcije</h3>
+            <p>Objasni čemu služi pojedini dio i odaberi pravo računalo za određeni zadatak.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s2">
+      <div class="content">
+        <div class="eyebrow">1. Vrste računala</div>
+        <h2 id="s2">Računalo nije samo stolni PC</h2>
+        <div class="grid two">
+          <article class="card">
+            <div class="icon">⚙️</div>
+            <h3>Računalni sustav</h3>
+            <p>Skup međusobno povezanih dijelova koji zajedno primaju podatke, obrađuju ih, pohranjuju i prikazuju
+              rezultat.</p>
+            <div class="chips"><span class="chip">hardver</span><span class="chip">softver</span><span
+                class="chip">podaci</span><span class="chip">korisnik</span></div>
+          </article>
+          <article class="card">
+            <div class="icon">🔍</div>
+            <h3>Dvije korisne podjele</h3>
+            <ul class="list">
+              <li><strong>Prema namjeni:</strong> opća ili posebna namjena.</li>
+              <li><strong>Prema veličini i snazi:</strong> od osobnih računala do superračunala.</li>
+              <li>Isti uređaj može se opisati objema podjelama: npr. prijenosnik je osobno računalo opće namjene.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout"><strong>Primjer:</strong> računalo u perilici rublja obavlja jednu određenu zadaću, dok
+          osobno računalo može služiti za pisanje, učenje, igranje, komunikaciju i programiranje.</div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s3">
+      <div class="content">
+        <div class="eyebrow">Prema namjeni</div>
+        <h2 id="s3">Opća i posebna namjena</h2>
+        <div class="grid two">
+          <article class="card">
+            <div class="icon">🖥️</div>
+            <h3>Računala opće namjene</h3>
+            <p>Mogu izvršavati velik broj različitih programa. Njihovu namjenu određuje softver koji korisnik pokrene.
+            </p>
+            <div class="chips"><span class="chip">stolni PC</span><span class="chip">prijenosnik</span><span
+                class="chip">tablet</span><span class="chip">radna stanica</span></div>
+          </article>
+          <article class="card">
+            <div class="icon">🏭</div>
+            <h3>Računala posebne namjene</h3>
+            <p>Projektirana su za jednu ili mali broj jasno određenih zadaća. Često su ugrađena u drugi uređaj.</p>
+            <div class="chips"><span class="chip">semafor</span><span class="chip">bankomat</span><span
+                class="chip">automobil</span><span class="chip">klima-uređaj</span></div>
+          </article>
+        </div>
+        <div class="callout">Takvo ugrađeno računalo često se naziva <strong>procesno</strong> ili ugrađeno računalo:
+          nadzire i upravlja nekim procesom, primjerice temperaturom, motorom ili proizvodnom linijom.</div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s4">
+      <div class="content">
+        <div class="eyebrow">Prema veličini i snazi</div>
+        <h2 id="s4">Od osobnog računala do superračunala</h2>
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>Vrsta</th>
+              <th>Za koga / što?</th>
+              <th>Prepoznatljiv primjer uporabe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Osobno računalo</strong></td>
+              <td>Jedan korisnik; svakodnevni rad, škola i zabava</td>
+              <td>Stolno računalo ili prijenosnik kod kuće</td>
+            </tr>
+            <tr>
+              <td><strong>Radna stanica</strong></td>
+              <td>Jedan profesionalni korisnik; zahtjevni programi</td>
+              <td>3D modeliranje, CAD, montaža videa, znanstveni rad</td>
+            </tr>
+            <tr>
+              <td><strong>Poslužitelj</strong></td>
+              <td>Više korisnika i uređaja preko mreže</td>
+              <td>Web-stranica, školske datoteke, e-pošta ili igraći poslužitelj</td>
+            </tr>
+            <tr>
+              <td><strong>Veliko računalo</strong></td>
+              <td>Velik broj korisnika i mnogo poslovnih transakcija</td>
+              <td>Banka, osiguranje ili velika državna ustanova</td>
+            </tr>
+            <tr>
+              <td><strong>Superračunalo</strong></td>
+              <td>Vrlo složeni proračuni koji se paralelno obrađuju</td>
+              <td>Vremenske prognoze, simulacije, istraživanja</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s5">
+      <div class="content">
+        <div class="eyebrow">Vrste računala</div>
+        <h2 id="s5">Što ih razlikuje?</h2>
+        <div class="grid three">
+          <article class="card">
+            <div class="icon">👤</div>
+            <h3>Osobno računalo</h3>
+            <p>Namijenjeno je uglavnom jednom korisniku. Može biti stolno, prijenosno ili vrlo malo, poput pametnog
+              telefona.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🧠</div>
+            <h3>Radna stanica</h3>
+            <p>Izgleda slično PC-u, ali ima snažniji procesor, više radne memorije i često profesionalnu grafiku za
+              zahtjevne zadatke.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🌐</div>
+            <h3>Poslužitelj</h3>
+            <p>Ne mora imati monitor ni tipkovnicu. Njegova je zadaća drugim računalima pružati usluge i podatke putem
+              mreže.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🏢</div>
+            <h3>Veliko računalo</h3>
+            <p>Pouzdano obrađuje velik broj transakcija i korisnika istodobno. Važni su sigurnost, dostupnost i
+              stabilnost rada.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🚀</div>
+            <h3>Superračunalo</h3>
+            <p>Sastoji se od velikog broja procesora koji zajedno rješavaju iznimno zahtjevne znanstvene i tehničke
+              probleme.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🧷</div>
+            <h3>Procesno računalo</h3>
+            <p>Ugrađeno je u uređaj i upravlja procesom u stvarnom vremenu: mjeri, odlučuje i reagira prema programu.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s6">
+      <div class="content">
+        <div class="eyebrow">Prijenosna računala</div>
+        <h2 id="s6">Računalna snaga koju nosimo sa sobom</h2>
+        <div class="grid three">
+          <article class="card">
+            <div class="icon">💼</div>
+            <h3>Prijenosnik</h3>
+            <p>U jednom kućištu objedinjuje zaslon, tipkovnicu, bateriju, dodirnu pločicu i osnovne komponente stolnog
+              računala.</p>
+          </article>
+          <article class="card">
+            <div class="icon">📱</div>
+            <h3>Tablet i pametni telefon</h3>
+            <p>Vrlo prijenosni uređaji s dodirnim zaslonom. Sadrže procesor, memoriju, pohranu, bateriju i
+              komunikacijske module.</p>
+          </article>
+          <article class="card">
+            <div class="icon">⚖️</div>
+            <h3>Kompromis</h3>
+            <p>Manja masa i baterijsko napajanje donose mobilnost, ali nadogradnja, hlađenje i najveće performanse često
+              su ograničeni.</p>
+          </article>
+        </div>
+        <div class="callout"><strong>Zapamti:</strong> „prijenosno” opisuje oblik i mogućnost nošenja; „osobno računalo”
+          opisuje uobičajenu namjenu za jednog korisnika.</div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s7">
+      <div class="content">
+        <div class="eyebrow">2. Unutarnji dijelovi</div>
+        <h2 id="s7">Što se nalazi u kućištu računala?</h2>
+        <div class="component-diagram">
+          <div class="diagram-node"><span class="big">⚡</span>Napajanje<span>isporučuje električnu energiju</span></div>
+          <div class="diagram-node"><span class="big">🔗</span>Matična ploča<span>povezuje i omogućuje
+              komunikaciju</span></div>
+          <div class="diagram-node"><span class="big">❄️</span>Hlađenje<span>odvodi toplinu</span></div>
+          <div class="diagram-node"><span class="big">🧠</span>Procesor + RAM<span>izvršavanje i privremeni rad</span>
+          </div>
+          <div class="diagram-node"><span class="big">💾</span>Pohrana<span>trajno čuva podatke</span></div>
+          <div class="diagram-node"><span class="big">🎮</span>Grafika + zvuk<span>slika i zvučni izlaz</span></div>
+        </div>
+        <div class="callout">Komponente nisu samostalne cjeline: matična ploča ih povezuje, napajanje ih opskrbljuje
+          energijom, a hlađenje održava sigurnu radnu temperaturu.</div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s8">
+      <div class="content">
+        <div class="eyebrow">Kućište i napajanje</div>
+        <h2 id="s8">Zaštita, raspored i energija</h2>
+        <div class="grid two">
+          <article class="card">
+            <div class="icon">📦</div>
+            <h3>Kućište</h3>
+            <ul class="list">
+              <li>Mehanički štiti komponente od dodira, prašine i oštećenja.</li>
+              <li>Omogućuje uredan raspored, protok zraka i ugradnju ventilatora.</li>
+              <li>Postoje različite veličine: mini, srednje i veliko kućište.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="icon">⚡</div>
+            <h3>Napajanje (PSU)</h3>
+            <ul class="list">
+              <li>Pretvara mrežni izmjenični napon u istosmjerne napone potrebne računalnim komponentama.</li>
+              <li>Snaga se izražava u vatima (W).</li>
+              <li>Kvalitetno napajanje doprinosi stabilnom i sigurnom radu računala.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s9">
+      <div class="content">
+        <div class="eyebrow">Matična ploča</div>
+        <h2 id="s9">Središnja veza svih komponenti</h2>
+        <div class="grid two">
+          <article class="card">
+            <div class="icon">🗺️</div>
+            <h3>Uloga matične ploče</h3>
+            <p>To je glavna tiskana pločica računala. Na nju se ugrađuju ili se na nju povezuju procesor, radna
+              memorija, diskovi, grafička kartica, priključci i napajanje.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔌</div>
+            <h3>Važni dijelovi</h3>
+            <div class="chips"><span class="chip">ležište procesora</span><span class="chip">utora za RAM</span><span
+                class="chip">PCIe utori</span><span class="chip">SATA/M.2 priključci</span><span class="chip">USB
+                priključci</span><span class="chip">BIOS/UEFI</span></div>
+          </article>
+        </div>
+        <div class="callout"><strong>Kompatibilnost:</strong> procesor mora odgovarati ležištu (socketu) matične ploče,
+          a vrsta radne memorije mora biti podržana na ploči.</div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s10">
+      <div class="content">
+        <div class="eyebrow">Procesor i RAM</div>
+        <h2 id="s10">Obrada i kratkotrajno pamćenje</h2>
+        <div class="grid two">
+          <article class="card">
+            <div class="icon">🧠</div>
+            <h3>Procesor (CPU)</h3>
+            <p>Izvršava naredbe programa, obrađuje podatke i koordinira rad računala. Važne značajke su broj jezgri,
+              radni takt, predmemorija i potrošnja energije.</p>
+            <div class="chips"><span class="chip">aritmetika</span><span class="chip">logika</span><span
+                class="chip">upravljanje</span></div>
+          </article>
+          <article class="card">
+            <div class="icon">🟦</div>
+            <h3>Radna memorija (RAM)</h3>
+            <p>Privremeno čuva podatke i programe s kojima računalo trenutačno radi. Brza je, ali je
+              <strong>nepostojana</strong>: sadržaj se gubi pri gašenju računala.
+            </p>
+            <div class="chips"><span class="chip">brz pristup</span><span class="chip">privremeni podaci</span><span
+                class="chip">više programa odjednom</span></div>
+          </article>
+        </div>
+        <div class="callout"><strong>Usporedba:</strong> CPU je poput kuhara koji izvršava recept, RAM je radna ploha na
+          kojoj su trenutno potrebni sastojci, a disk je kuhinjski ormarić u kojem ostaju spremljeni.</div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s11">
+      <div class="content">
+        <div class="eyebrow">Jedinice za pohranu</div>
+        <h2 id="s11">Gdje ostaju datoteke nakon gašenja?</h2>
+        <div class="grid two">
+          <article class="card">
+            <div class="icon">💽</div>
+            <h3>HDD — tvrdi disk</h3>
+            <p>Podatke pohranjuje na magnetske ploče koje se okreću. Obično nudi velik kapacitet po nižoj cijeni, ali je
+              sporiji i osjetljiviji na udarce od SSD-a.</p>
+          </article>
+          <article class="card">
+            <div class="icon">⚡</div>
+            <h3>SSD — poluvodički disk</h3>
+            <p>Nema pokretnih dijelova. Brže pokreće operacijski sustav i programe, tiši je i otporniji na potrese. Može
+              biti SATA ili M.2/NVMe izvedbe.</p>
+          </article>
+        </div>
+        <div class="grid three" style="margin-top:20px">
+          <div class="card">
+            <h3>Kapacitet</h3>
+            <p>Izražava se u GB i TB. Određuje koliko podataka možemo trajno spremiti.</p>
+          </div>
+          <div class="card">
+            <h3>Trajnost podataka</h3>
+            <p>Za razliku od RAM-a, podaci na SSD-u i HDD-u ostaju nakon isključivanja napajanja.</p>
+          </div>
+          <div class="card">
+            <h3>Sigurnosna kopija</h3>
+            <p>Važne datoteke čuvamo na još jednom mjestu: vanjskom disku ili u oblaku.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s12">
+      <div class="content">
+        <div class="eyebrow">Grafika, zvuk i hlađenje</div>
+        <h2 id="s12">Slika, zvuk i sigurna temperatura</h2>
+        <div class="grid three">
+          <article class="card">
+            <div class="icon">🎮</div>
+            <h3>Grafička kartica (GPU)</h3>
+            <p>Obrađuje i šalje sliku na zaslon. Može biti integrirana u procesor ili zasebna kartica za zahtjevne igre,
+              3D rad i obradu videa.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔊</div>
+            <h3>Zvučna kartica</h3>
+            <p>Obrađuje zvuk za slušalice, zvučnike i mikrofon. U većini računala ugrađena je na matičnoj ploči, a može
+              biti i zasebna kartica ili USB uređaj.</p>
+          </article>
+          <article class="card">
+            <div class="icon">❄️</div>
+            <h3>Hlađenje</h3>
+            <p>Hladnjaci, ventilatori i ponekad tekućinsko hlađenje odvode toplinu s procesora i grafike te sprječavaju
+              pregrijavanje i smanjenje brzine rada.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s13">
+      <div class="content">
+        <div class="eyebrow">Povezivanje znanja</div>
+        <h2 id="s13">Kako računalo obavlja zadatak?</h2>
+        <div class="flow">
+          <div class="flow-item">
+            <div class="big">⌨️</div><strong>Ulaz</strong><small>tipkovnica, miš, mreža</small>
+          </div>
+          <div class="arrow">→</div>
+          <div class="flow-item">
+            <div class="big">🧠</div><strong>CPU + RAM</strong><small>obrada podataka</small>
+          </div>
+          <div class="arrow">→</div>
+          <div class="flow-item">
+            <div class="big">🖥️</div><strong>Izlaz</strong><small>slika, zvuk, ispis</small>
+          </div>
+        </div>
+        <div class="grid two" style="margin-top:25px">
+          <article class="card">
+            <h3>Primjer: otvaranje igre</h3>
+            <p>SSD učitava datoteke igre u RAM. CPU izvršava programske naredbe, GPU stvara sliku na zaslonu, a zvučni
+              sustav reproducira zvuk. Napajanje osigurava energiju, a hlađenje odvodi toplinu.</p>
+          </article>
+          <article class="card">
+            <h3>Primjer: školski dokument</h3>
+            <p>Tipkovnica šalje uneseni tekst. CPU ga obrađuje, RAM ga privremeno drži tijekom rada, a spremanjem se
+              datoteka trajno zapisuje na SSD ili HDD.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s14">
+      <div class="content">
+        <div class="eyebrow">Provjeri znanje</div>
+        <h2 id="s14">Kratki interaktivni kviz</h2>
+        <div class="grid two">
+          <article class="card quiz" data-answer="b">
+            <h3>1. Koja komponenta privremeno čuva podatke tijekom rada?</h3>
+            <div class="grid"><button class="quiz-option" data-choice="a">A. SSD</button><button class="quiz-option"
+                data-choice="b">B. RAM</button><button class="quiz-option" data-choice="c">C. Napajanje</button></div>
+            <p class="feedback" aria-live="polite"></p>
+          </article>
+          <article class="card quiz" data-answer="c">
+            <h3>2. Koje računalo pruža usluge drugim računalima u mreži?</h3>
+            <div class="grid"><button class="quiz-option" data-choice="a">A. Radna stanica</button><button
+                class="quiz-option" data-choice="b">B. Procesno računalo</button><button class="quiz-option"
+                data-choice="c">C. Poslužitelj</button></div>
+            <p class="feedback" aria-live="polite"></p>
+          </article>
+          <article class="card quiz" data-answer="a">
+            <h3>3. Što je glavna zadaća matične ploče?</h3>
+            <div class="grid"><button class="quiz-option" data-choice="a">A. Povezuje komponente i omogućuje
+                komunikaciju</button><button class="quiz-option" data-choice="b">B. Dugoročno sprema
+                datoteke</button><button class="quiz-option" data-choice="c">C. Stvara zvuk</button></div>
+            <p class="feedback" aria-live="polite"></p>
+          </article>
+          <article class="card quiz" data-answer="b">
+            <h3>4. Koja je tipična zadaća superračunala?</h3>
+            <div class="grid"><button class="quiz-option" data-choice="a">A. Uređivanje bilješki jednog
+                učenika</button><button class="quiz-option" data-choice="b">B. Izvođenje vrlo složenih znanstvenih
+                proračuna</button><button class="quiz-option" data-choice="c">C. Upravljanje tipkovnicom</button></div>
+            <p class="feedback" aria-live="polite"></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" aria-labelledby="s15">
+      <div class="content">
+        <div class="eyebrow">Sažetak</div>
+        <h2 id="s15">Najvažnije za ponavljanje</h2>
+        <div class="grid two">
+          <article class="card">
+            <h3>Vrste računala</h3>
+            <ul class="list">
+              <li>Osobno računalo namijenjeno je uglavnom jednom korisniku.</li>
+              <li>Radna stanica je snažno računalo za profesionalne, zahtjevne poslove.</li>
+              <li>Poslužitelj pruža usluge drugim računalima u mreži.</li>
+              <li>Veliko računalo i superračunalo služe velikim količinama korisnika odnosno iznimno zahtjevnim
+                proračunima.</li>
+              <li>Procesno računalo upravlja određenim uređajem ili procesom.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Unutarnji dijelovi</h3>
+            <ul class="list">
+              <li>Matična ploča povezuje sve komponente.</li>
+              <li>CPU obrađuje naredbe, a RAM privremeno čuva podatke.</li>
+              <li>SSD/HDD trajno čuva datoteke.</li>
+              <li>GPU stvara sliku, zvučna kartica obrađuje zvuk.</li>
+              <li>Napajanje daje energiju, a hlađenje sprječava pregrijavanje.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout">Prije odabira ili nadogradnje računala uvijek razmisli o namjeni: školski rad, igre,
+          grafički dizajn, mrežne usluge ili upravljanje uređajem zahtijevaju različite komponente i razinu snage.</div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Navigacija kroz slajdove">
+    <button id="prev" aria-label="Prethodni slajd">←</button>
+    <span id="counter" class="counter" aria-live="polite">1 / 15</span>
+    <button id="next" aria-label="Sljedeći slajd">→</button>
+  </nav>
+  <div class="hint">Tipkovnica: ← → </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    let current = 0;
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+    }
+    document.getElementById('prev').addEventListener('click', () => show(current - 1));
+    document.getElementById('next').addEventListener('click', () => show(current + 1));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === 'PageDown') show(current + 1);
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') show(current - 1);
+      if (event.key === 'Home') show(0);
+      if (event.key === 'End') show(slides.length - 1);
+    });
+    document.querySelectorAll('.quiz').forEach(quiz => {
+      const answer = quiz.dataset.answer;
+      const feedback = quiz.querySelector('.feedback');
+      quiz.querySelectorAll('.quiz-option').forEach(button => button.addEventListener('click', () => {
+        quiz.querySelectorAll('.quiz-option').forEach(item => item.classList.remove('correct', 'wrong'));
+        const correct = button.dataset.choice === answer;
+        button.classList.add(correct ? 'correct' : 'wrong');
+        if (!correct) quiz.querySelector(`[data-choice="${answer}"]`).classList.add('correct');
+        feedback.textContent = correct ? 'Točno! Odlično.' : 'Nije točno. Označen je točan odgovor.';
+      }));
+    });
+    show(0);
+  </script>
+</body>
+
+</html>
