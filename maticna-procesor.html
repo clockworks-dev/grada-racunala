@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="hr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Matična ploča i procesor</title>
+    <link rel="stylesheet" href="extra.css">
+    <style>
+        :root {
+            --primary: #234c67;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            background: #0a1725;
+            color: #f1f7ff;
+            font-family: system-ui, -apple-system, Segoe UI, sans-serif
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at 80% 4%, #234c67, transparent 36%), #0a1725;
+            min-height: 100vh
+        }
+
+        .wrap {
+            max-width: 1320px;
+            margin: auto;
+            padding: 16px 22px
+        }
+
+        .head,
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .head {
+            color: #7fefd7;
+            font-size: .88rem;
+            font-weight: 800;
+            letter-spacing: .1em
+        }
+
+        .title {
+            font-size: clamp(1.6rem, 3vw, 2.5rem);
+            margin: 16px 0 2px
+        }
+
+        .sub {
+            color: #b3cadd;
+            margin: 0 0 19px
+        }
+
+        .slide {
+            display: none;
+            min-height: 610px;
+            border: 1px solid #38697a;
+            border-radius: 24px;
+            background: linear-gradient(125deg, #142c42, #10283b);
+            padding: clamp(22px, 4vw, 52px);
+            align-items: center;
+            gap: 32px;
+            box-shadow: 0 25px 70px #0006
+        }
+
+        .slide.active {
+            display: flex
+        }
+
+        .text {
+            flex: 1.15
+        }
+
+        .badge {
+            color: #79ebd6;
+            text-transform: uppercase;
+            letter-spacing: .13em;
+            font-weight: 850
+        }
+
+        h2 {
+            font-size: clamp(2.1rem, 4.8vw, 4rem);
+            line-height: 1.1;
+            margin: 18px 0
+        }
+
+        .text p {
+            font-size: clamp(1.17rem, 1.8vw, 1.55rem);
+            line-height: 1.62;
+            max-width: 62ch
+        }
+
+        .text aside {
+            background: #24506a;
+            border-left: 5px solid #82e7cc;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin-top: 26px;
+            font-size: 1.1rem;
+            line-height: 1.5
+        }
+
+        .text aside span {
+            color: #a9f9e5;
+            font-size: .78rem;
+            font-weight: 850;
+            letter-spacing: .09em
+        }
+
+        figure {
+            width: min(38%, 450px);
+            margin: 0;
+            background: #1a3b52;
+            border: 1px solid #447586;
+            border-radius: 18px;
+            padding: 12px
+        }
+
+        figure img {
+            width: 100%;
+            height: 330px;
+            object-fit: contain;
+            background: #eff5f5;
+            border-radius: 10px;
+            display: block
+        }
+
+        figcaption {
+            color: #c1d6e0;
+            font-size: .81rem;
+            line-height: 1.4;
+            margin: 12px 3px 2px
+        }
+
+        a {
+            color: #9bf2dd
+        }
+
+        .fallback {
+            min-height: 330px;
+            display: grid;
+            place-items: center;
+            padding: 20px
+        }
+
+        .fallback[hidden] {
+            display: none
+        }
+
+        button {
+            font: inherit;
+            color: white;
+            background: #22516a;
+            border: 1px solid #83b4c0;
+            border-radius: 11px;
+            padding: 10px 15px;
+            cursor: pointer
+        }
+
+        button:hover,
+        button:focus-visible {
+            background: #2d7482
+        }
+
+        button:disabled {
+            opacity: .4;
+            cursor: not-allowed
+        }
+
+        .nav {
+            margin: 18px 0
+        }
+
+        .track {
+            height: 6px;
+            background: #27516a;
+            border-radius: 12px
+        }
+
+        .track span {
+            height: 100%;
+            display: block;
+            border-radius: 12px;
+            background: #7fefd7
+        }
+
+        .sources {
+            font-size: .83rem;
+            color: #aac4d1;
+            line-height: 1.7;
+            padding: 20px 0
+        }
+
+        @media(max-width:850px) {
+            .slide {
+                flex-direction: column;
+                align-items: stretch;
+                min-height: 0
+            }
+
+            figure {
+                width: 100%
+            }
+
+            figure img,
+            .fallback {
+                height: 260px;
+                min-height: 260px
+            }
+
+            .text p {
+                font-size: 1.12rem
+            }
+        }
+
+        @media print {
+
+            html,
+            body {
+                background: white;
+                color: #111
+            }
+
+            .slide,
+            .slide.active {
+                display: flex;
+                break-after: page;
+                min-height: 90vh;
+                background: white;
+                color: #111;
+                border: 0;
+                box-shadow: none
+            }
+
+            .badge {
+                color: #00695b
+            }
+
+            .text aside {
+                background: #e6f2f1;
+                color: #111
+            }
+
+            .text aside span {
+                color: #00695b
+            }
+
+            .nav,
+            .track,
+            .head button {
+                display: none
+            }
+
+            figure {
+                border: 1px solid #ddd;
+                background: white
+            }
+
+            figcaption,
+            .sources {
+                color: #333
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="wrap">
+        <header class="head"><span>GRAĐA RAČUNALA · 1. RAZRED · TEHNIČAR ZA RAČUNARSTVO</span><button id="print"
+                type="button">Ispis / PDF</button></header>
+        <h1 class="title mb-space-8">Matična ploča i procesor</h1>
+        <div id="deck">
+            <section class="slide" id="s1" aria-label="Slajd 1">
+                <div class="text">
+                    <div class="badge">Matična ploča · 1 / 10</div>
+                    <h2>Uloga matične ploče</h2>
+                    <p>Matična ploča povezuje procesor, RAM, pohranu i dodatne uređaje. Vodovi i priključci omogućuju
+                        prijenos podataka i napajanja. Ona nije sama procesor.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Pokaži na fotografiji ploče najveće ležište i utore za
+                        memoriju.</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s2" aria-label="Slajd 2">
+                <div class="text">
+                    <div class="badge">Matična ploča · 2 / 10</div>
+                    <h2>Tiskana pločica i raspored</h2>
+                    <p>Ploča ima vodljive staze, više slojeva, sklopove, utore i priključke. Raspored se razlikuje po
+                        modelu, pojednostavljena shema služi samo za orijentaciju.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Zašto nisu sve matične ploče jednako velike?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s3" aria-label="Slajd 3">
+                <div class="text">
+                    <div class="badge">Matična ploča · 3 / 10</div>
+                    <h2>Format ploče</h2>
+                    <p>ATX, microATX i Mini-ITX primjeri su formata. Format utječe na dimenzije i broj dostupnih mjesta
+                        za proširenja. Prije kupnje provjeri podršku kućišta i položaj odstojnika.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Usporedi veličinu i mogućnosti ATX i Mini-ITX.</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s4" aria-label="Slajd 4">
+                <div class="text">
+                    <div class="badge">Matična ploča · 4 / 10</div>
+                    <h2>Ležište procesora</h2>
+                    <p>CPU se postavlja u točno određeno ležište (socket). Oblik ležišta nije dovoljan dokaz
+                        kompatibilnosti: provjeri službeni popis podržanih CPU-a i verziju UEFI-ja.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Što može poći po zlu ako kupiš CPU „sličnog izgleda”?
+                    </aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s5" aria-label="Slajd 5">
+                <div class="text">
+                    <div class="badge">Matična ploča · 5 / 10</div>
+                    <h2>Utori za RAM</h2>
+                    <p>DIMM utori prihvaćaju module radne memorije. Provjeri generaciju DDR-a, kapacitet i preporučene
+                        utore u priručniku ploče. DDR4 i DDR5 nisu međusobno zamjenjivi.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Kako saznati u koja dva utora staviti dva modula?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s6" aria-label="Slajd 6">
+                <div class="text">
+                    <div class="badge">Matična ploča · 6 / 10</div>
+                    <h2>PCI Express</h2>
+                    <p>PCIe utori služe karticama za proširenje, primjerice grafičkoj ili mrežnoj. Duljina utora i broj
+                        električnih linija nisu nužno ista stvar. Upute ploče određuju mogućnosti.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Koji utor obično koristi zasebna grafička kartica?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s7" aria-label="Slajd 7">
+                <div class="text">
+                    <div class="badge">Matična ploča · 7 / 10</div>
+                    <h2>Pohrana: M.2 i SATA</h2>
+                    <p>M.2 utor može prihvatiti odgovarajući SSD, a SATA priključak povezuje SATA uređaje podatkovnim
+                        kabelom. Nije svaki M.2 utor jednak: provjeri podršku za NVMe/PCIe ili SATA.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Zašto SATA SSD treba i priključak napajanja?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s8" aria-label="Slajd 8">
+                <div class="text">
+                    <div class="badge">Matična ploča · 8 / 10</div>
+                    <h2>Napajanje i priključci</h2>
+                    <p>24-pinski ATX dovodi napajanje ploči. Zasebni CPU/EPS priključak opskrbljuje procesor. USB, audio
+                        i prekidači prednje ploče spajaju se na odgovarajuće unutarnje priključke.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Zašto CPU/EPS kabel ne smijemo zamijeniti s PCIe kabelom?
+                    </aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s9" aria-label="Slajd 9">
+                <div class="text">
+                    <div class="badge">Matična ploča · 9 / 10</div>
+                    <h2>UEFI, čipset i priključci</h2>
+                    <p>UEFI inicijalizira računalo prije učitavanja operacijskog sustava. Čipset i dizajn ploče utječu
+                        na dostupne USB, PCIe i priključke pohrane. Stražnji panel može imati mrežu, USB, zvuk i video.
+                    </p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Radi li video izlaz ploče uvijek? Ne — treba podržana
+                        integrirana grafika.</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s10" aria-label="Slajd 10">
+                <div class="text">
+                    <div class="badge">Matična ploča · 10 / 10</div>
+                    <h2>Čitanje specifikacija ploče</h2>
+                    <p>Za odabir ploče provjeri format, socket, podržane procesore, vrstu RAM-a, PCIe/M.2/SATA utore,
+                        vanjske priključke i UEFI. Zapiši točan model, ne samo naziv proizvođača.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Zadatak: izradi kontrolni popis od najmanje šest stavki za
+                        kupnju ploče.</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/motherboard-components-diagram.jpg" loading="lazy"
+                        alt="Fotografija s označenim dijelovima matične ploče"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a
+                            href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s11" aria-label="Slajd 11">
+                <div class="text">
+                    <div class="badge">Procesor · 1 / 10</div>
+                    <h2>Što je procesor?</h2>
+                    <p>CPU je središnja procesorska jedinica koja izvršava programske naredbe i obrađuje podatke.
+                        Povezan je s RAM-om i drugim uređajima preko matične ploče.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Objasni razliku između CPU-a i matične ploče jednom
+                        rečenicom.</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s12" aria-label="Slajd 12">
+                <div class="text">
+                    <div class="badge">Procesor · 2 / 10</div>
+                    <h2>Ciklus naredbe</h2>
+                    <p>Pojednostavljeno: procesor dohvaća naredbu iz memorije, dekodira je i izvršava. Rezultat može
+                        spremiti ili proslijediti drugim dijelovima sustava.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>U kojem koraku procesor prepoznaje što naredba znači?
+                    </aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s13" aria-label="Slajd 13">
+                <div class="text">
+                    <div class="badge">Procesor · 3 / 10</div>
+                    <h2>Jezgre</h2>
+                    <p>Jezgra je fizička izvršna jedinica unutar procesora. Više jezgri može omogućiti istodobni rad na
+                        više zadataka, ako programi to mogu iskoristiti. Broj jezgri sam ne određuje brzinu.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Zašto četverojezgreni CPU nije automatski dvostruko brži
+                        od dvojezgrenog?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s14" aria-label="Slajd 14">
+                <div class="text">
+                    <div class="badge">Procesor · 4 / 10</div>
+                    <h2>Dretve</h2>
+                    <p>Hardverske dretve ili logički procesori način su raspoređivanja rada na jezgrama, ovisno o
+                        arhitekturi. Dvije dretve na jezgri ne znače dvije fizičke jezgre.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Je li oznaka 6 jezgri / 12 dretvi jednaka 12 fizičkih
+                        jezgri?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s15" aria-label="Slajd 15">
+                <div class="text">
+                    <div class="badge">Procesor · 5 / 10</div>
+                    <h2>Takt i GHz</h2>
+                    <p>Takt se iskazuje u GHz. Radna frekvencija može se mijenjati ovisno o opterećenju, temperaturi i
+                        ograničenjima napajanja. Različite procesore ne uspoređujemo samo prema GHz.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Što još provjeriti osim radnog takta?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s16" aria-label="Slajd 16">
+                <div class="text">
+                    <div class="badge">Procesor · 6 / 10</div>
+                    <h2>Predmemorija i RAM</h2>
+                    <p>Cache (npr. L1, L2 i L3) čuva često korištene podatke bliže jezgrama. Manji je, ali znatno brži
+                        od RAM-a. RAM ima veću ulogu u čuvanju podataka aktivnih programa.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Koja je memorija bliža jezgri: cache ili RAM?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s17" aria-label="Slajd 17">
+                <div class="text">
+                    <div class="badge">Procesor · 7 / 10</div>
+                    <h2>Građa procesora</h2>
+                    <p>Procesor se sastoji od aritmetičko-logičke jedinice (ALU), upravljačke jedinice (CU) te skupa registara.
+                        različite arhitekture organiziraju ih na različite načine. Integrirana grafika postoji samo na
+                        određenim modelima.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Zašto računalo bez zasebne grafičke kartice možda nema
+                        sliku?</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s18" aria-label="Slajd 18">
+                <div class="text">
+                    <div class="badge">Procesor · 8 / 10</div>
+                    <h2>Potrošnja i hlađenje</h2>
+                    <p>CPU proizvodi toplinu. Hladnjak i ventilator ili odgovarajuće vodeno hlađenje odvode toplinu.
+                        Termalna pasta poboljšava dodir između CPU-a i hladnjaka. Provjeri kompatibilnost nosača i
+                        priključak CPU_FAN.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Što bi se dogodilo kada hladnjak ne bi ispravno nalijegao?
+                    </aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s19" aria-label="Slajd 19">
+                <div class="text">
+                    <div class="badge">Procesor · 9 / 10</div>
+                    <h2>Kompatibilnost i ugradnja</h2>
+                    <p>Prije ugradnje provjeri službeni popis podržanih procesora, socket, čipset i UEFI. Isključi
+                        napajanje, zaštiti komponente od ESD-a, primi CPU za rubove i postavi ga prema oznaci bez sile.
+                    </p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Smije li se ispravljati otpor pritiskanjem CPU-a? Ne.
+                    </aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+            <section class="slide" id="s20" aria-label="Slajd 20">
+                <div class="text">
+                    <div class="badge">Procesor · 10 / 10</div>
+                    <h2>Provjera i ponavljanje</h2>
+                    <p>Nakon montaže provjeri CPU/EPS napajanje, hladnjak, CPU_FAN i RAM. U UEFI-ju provjeri prepoznati
+                        model CPU-a i temperaturu. Objasni kako ploča, CPU, memorija i hlađenje surađuju.</p>
+                    <aside><span>RAZMISLI / ZADATAK</span><br>Izlazna kartica: napiši tri pojma koja sada možeš
+                        objasniti.</aside>
+                </div>
+                <figure><img class="modalImage" src="./media/Intel_i9-14900KF_CPU.jpg" loading="lazy"
+                        alt="Fotografija procesora Intel Core i9"
+                        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+                    <div class="fallback" hidden>Slika nije dostupna bez internetske veze. Pogledaj izvor slike.</div>
+                    <figcaption>Fotografija: <a href="https://commons.wikimedia.org/wiki/File:Intel_i9-14900KF_CPU.jpg"
+                            target="_blank" rel="noopener noreferrer">izvor slike ↗</a> · prikaz je primjer, ne nacrt
+                        konkretnog modela.</figcaption>
+                </figure>
+            </section>
+        </div>
+        <div class="track"><span id="fill"></span></div>
+        <nav class="nav"><button type="button" id="prev">← Prethodni</button><span id="count"
+                aria-live="polite"></span><button type="button" id="next">Sljedeći →</button></nav>
+        <footer class="sources">Izvori sadržaja: <a
+                href="https://computerinfobits.com/learn/parts-of-a-motherboard-and-their-functions" target="_blank">dijelovi ploče</a>
+            · <a href="https://www.intel.com/content/www/us/en/gaming/resources/how-hybrid-design-works.html" target="_blank">jezgre
+                CPU-a</a> · <a
+                href="https://www.dell.com/support/kbdoc/en-us/000137973/safety-precautions-when-working-with-electrical-equipment" target="_blank">sigurnost
+                i ESD</a>. Izvori fotografija povezani su ispod svake slike. Za montažu
+            uvijek pogledaj priručnik svojega modela.</footer>
+    </main>
+
+    <!-- The Modal -->
+    <div id="imageModal" class="modal">
+
+        <!-- The Close Button -->
+        <span class="close">&times;</span>
+
+        <!-- Modal Content (The Image) -->
+        <img class="modal-content" id="imageModalElement">
+
+        <!-- Modal Caption (Image Text) -->
+        <div id="caption"></div>
+    </div>
+
+    <script src="./imageModal.js"></script>
+    <script>const slides = [...document.querySelectorAll('.slide')]; let n = 0; function show(i) { n = Math.min(slides.length - 1, Math.max(0, i)); slides.forEach((s, k) => { s.classList.toggle('active', k === n); s.setAttribute('aria-hidden', k === n ? 'false' : 'true') }); document.querySelector('#count').textContent = `${n + 1} / ${slides.length}`; document.querySelector('#prev').disabled = n === 0; document.querySelector('#next').disabled = n === slides.length - 1; document.querySelector('#fill').style.width = 100 * (n + 1) / slides.length + '%'; history.replaceState(null, '', '#s' + (n + 1)) } document.querySelector('#prev').onclick = () => show(n - 1); document.querySelector('#next').onclick = () => show(n + 1); document.querySelector('#print').onclick = () => print(); document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'PageDown') show(n + 1); if (e.key === 'ArrowLeft' || e.key === 'PageUp') show(n - 1) }); show(Number(location.hash.match(/^#s(\d+)$/)?.[1] || 1) - 1);</script>
+</body>
+
+</html>

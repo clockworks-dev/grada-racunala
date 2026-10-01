@@ -40,6 +40,10 @@
     margin-top: var(--space-8);
 }
 
+.mb-space-8 {
+    margin-bottom: var(--space-8) !important;
+}
+
 .mt-space-4 {
     margin-top: var(--space-4);
 }
