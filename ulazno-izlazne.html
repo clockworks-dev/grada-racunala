@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="hr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ulazne i izlazne jedinice – 1. razred</title>
+    <style>
+        :root {
+            --bg: #091321;
+            --panel: #132337;
+            --text: #edf4ff;
+            --muted: #b9cae1;
+            --accent: #64e0d4
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, Arial, sans-serif;
+            line-height: 1.55
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background: #091321f5;
+            z-index: 4;
+            border-bottom: 1px solid #32465e;
+            padding: 12px 4%;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        header span {
+            margin-right: auto
+        }
+
+        button,
+        select {
+            font: inherit;
+            border: 1px solid #557089;
+            border-radius: 8px;
+            background: #20364f;
+            color: white;
+            padding: 7px 12px;
+            cursor: pointer
+        }
+
+        button:hover {
+            background: #315675
+        }
+
+        main {
+            max-width: 1220px;
+            margin: auto;
+            padding: 24px
+        }
+
+        .slide {
+            display: none;
+            position: relative;
+            background: var(--panel);
+            border: 1px solid #32465e;
+            border-radius: 20px;
+            padding: 32px 42px;
+            min-height: 72vh
+        }
+
+        .slide.active {
+            display: block
+        }
+
+        .tag {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: .85rem
+        }
+
+        h2 {
+            font-size: clamp(1.7rem, 3vw, 2.8rem);
+            line-height: 1.2;
+            margin: 16px 0 24px
+        }
+
+        h3 {
+            color: var(--accent);
+            margin: 0 0 12px;
+            font-size: 1.3rem
+        }
+
+        p,
+        li,
+        td,
+        th {
+            font-size: clamp(1rem, 1.45vw, 1.2rem)
+        }
+
+        li {
+            margin-bottom: 10px
+        }
+
+        p {
+            margin: 12px 0
+        }
+
+        .lead {
+            font-size: 1.5rem
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+            gap: 18px
+        }
+
+        article {
+            padding: 22px;
+            background: #0c1a2c;
+            border-radius: 12px
+        }
+
+        .note {
+            padding: 15px 20px;
+            border-left: 4px solid var(--accent);
+            background: #1c3545;
+            border-radius: 0 10px 10px 0;
+            margin-top: 22px
+        }
+
+        .flow {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0
+        }
+
+        .flow span {
+            padding: 18px;
+            background: #25455b;
+            border-radius: 12px
+        }
+
+        .formula,
+        .spec {
+            padding: 20px;
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.3rem;
+            margin: 20px 0
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 18px 0
+        }
+
+        td,
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #38516c
+        }
+
+        th {
+            color: var(--accent);
+            background: #0c1a2c
+        }
+
+        footer {
+            margin-top: 28px;
+            font-size: .78rem;
+            color: var(--muted)
+        }
+
+        a {
+            color: #a5deff
+        }
+
+        details {
+            background: #0c1a2c;
+            padding: 15px;
+            border-radius: 10px
+        }
+
+        summary {
+            cursor: pointer;
+            color: var(--accent)
+        }
+
+        .rgb {
+            display: flex;
+            gap: 8px
+        }
+
+        .rgb span {
+            padding: 12px 22px;
+            background: #b82535
+        }
+
+        .rgb span:nth-child(2) {
+            background: #18774c
+        }
+
+        .rgb span:nth-child(3) {
+            background: #254eb8
+        }
+
+        .gradient {
+            height: 35px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #071623, #347caa, #c4ecff);
+            margin: 20px 0
+        }
+
+        .all .slide {
+            display: block;
+            margin-bottom: 24px;
+            min-height: 0
+        }
+
+        .q {
+            padding: 12px 0;
+            border-bottom: 1px solid #38516c
+        }
+
+        .q label {
+            display: block;
+            padding: 5px
+        }
+
+        .progress {
+            height: 4px;
+            background: #233c54
+        }
+
+        .progress div {
+            height: 100%;
+            background: var(--accent);
+            transition: width .2s
+        }
+
+        #result {
+            color: var(--accent)
+        }
+
+        .help {
+            text-align: center;
+            font-size: .85rem;
+            color: var(--muted);
+            padding: 8px
+        }
+
+        @media(max-width:650px) {
+            main {
+                padding: 10px
+            }
+
+            .slide {
+                padding: 23px 18px
+            }
+
+            td,
+            th {
+                padding: 7px 5px;
+                font-size: .9rem
+            }
+
+            header {
+                padding: 9px
+            }
+
+            header span {
+                width: 100%
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black
+            }
+
+            header,
+            .help,
+            .progress {
+                display: none
+            }
+
+            .slide {
+                display: block;
+                border: 0;
+                border-radius: 0;
+                background: white;
+                min-height: 0;
+                break-after: page;
+                padding: 15px
+            }
+
+            .cards article,
+            .note,
+            th,
+            details {
+                background: #eee;
+                color: black
+            }
+
+            h3,
+            .tag,
+            th,
+            a {
+                color: #155468
+            }
+
+            footer {
+                color: #333
+            }
+
+            button {
+                display: none
+            }
+
+            .slide:last-child {
+                break-after: auto
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header><span>Računarstvo · Ulazne i izlazne jedinice</span><button id="prev"
+            aria-label="Prethodni slajd">←</button><select id="jump" aria-label="Odaberi slajd"></select><button
+            id="next" aria-label="Sljedeći slajd">→</button><button id="mode">Svi slajdovi</button><button
+            id="full">Puni zaslon</button><button onclick="window.print()">Ispis / PDF</button></header>
+    <div class="progress">
+        <div id="bar"></div>
+    </div>
+    <main>
+        <section class="slide" id="s1" aria-label="Slajd 1">
+            <div class="tag">Osnove · 1/19</div>
+            <h2>Ulazne i izlazne jedinice</h2>
+            <p class="lead">1. razred srednje škole · Tehničar za računarstvo</p>
+            <div class="flow"><span>ULAZ</span><span>→ OBRADA →</span><span>IZLAZ</span></div>
+            <p>Kako računalo prima podatke i prikazuje rezultate? Posebna cjelina: 10 slajdova o monitorima.</p>
+            <p class="note">Ciljevi: razlikovati ulazne i izlazne uređaje, objasniti specifikacije monitora i usporediti
+                tehnologije zaslona.</p>
+            <footer>Nastavni primjer / zadatak</footer>
+        </section>
+        <section class="slide" id="s2" aria-label="Slajd 2">
+            <div class="tag">Osnove · 2/19</div>
+            <h2>Kako komuniciramo s računalom?</h2>
+            <div class="cards">
+                <article>
+                    <h3>Ulaz</h3>
+                    <p>Unos podataka i naredbi u računalo.</p>
+                    <p>Tipkovnica → pritisak tipke.</p>
+                </article>
+                <article>
+                    <h3>Obrada</h3>
+                    <p>Procesor izvršava programske naredbe nad podatcima.</p>
+                    <p>Program oblikuje rezultat.</p>
+                </article>
+                <article>
+                    <h3>Izlaz</h3>
+                    <p>Prikaz ili predaja rezultata korisniku.</p>
+                    <p>Monitor → prikaz slova.</p>
+                </article>
+            </div>
+            <p class="note">Primjer: napišeš slovo A → računalo obradi unos → slovo se pojavi na zaslonu.</p>
+            <footer>Izvori: <a href="https://www.bbc.co.uk/bitesize/guides/zt6pn39/revision/1" target="_blank"
+                    rel="noopener">BBC – ulazne i izlazne jedinice</a></footer>
+        </section>
+        <section class="slide" id="s3" aria-label="Slajd 3">
+            <div class="tag">Osnove · 3/19</div>
+            <h2>Ulazne jedinice: tekst i upravljanje</h2>
+            <ul>
+                <li>Tipkovnica: unos teksta, brojeva i naredbi.</li>
+                <li>Miš: pomicanje pokazivača, odabir i povlačenje objekata.</li>
+                <li>Dodirna pločica (touchpad): upravljanje pokazivačem prstom.</li>
+                <li>Grafički tablet: crtanje i pisanje digitalnom olovkom.</li>
+                <li>Igraći upravljač: upravljanje u igrama i simulacijama.</li>
+            </ul>
+            <p class="note">Pitanje: koji bi uređaj upotrijebio za pisanje programa, a koji za digitalno crtanje?</p>
+            <footer>Izvori: <a href="https://www.bbc.co.uk/bitesize/guides/zt6pn39/revision/1" target="_blank"
+                    rel="noopener">BBC – ulazne i izlazne jedinice</a></footer>
+        </section>
+        <section class="slide" id="s4" aria-label="Slajd 4">
+            <div class="tag">Osnove · 4/19</div>
+            <h2>Ulazne jedinice: slika, zvuk i mjerenja</h2>
+            <div class="cards">
+                <article>
+                    <h3>Slika</h3>
+                    <p>Skener pretvara dokument u digitalnu sliku. Kamera i web-kamera unose fotografije ili video.</p>
+                </article>
+                <article>
+                    <h3>Zvuk</h3>
+                    <p>Mikrofon omogućuje unos govora i drugih zvukova.</p>
+                </article>
+                <article>
+                    <h3>Senzori</h3>
+                    <p>Mjere podatke iz okoline, npr. gibanje ili temperaturu.</p>
+                </article>
+            </div>
+            <p class="note">Skeniranje daje sliku dokumenta; za prepoznavanje teksta potreban je OCR – optičko
+                prepoznavanje znakova.</p>
+            <footer>Izvori: <a href="https://www.bbc.co.uk/bitesize/guides/zt6pn39/revision/1" target="_blank"
+                    rel="noopener">BBC – ulazne i izlazne jedinice</a></footer>
+        </section>
+        <section class="slide" id="s5" aria-label="Slajd 5">
+            <div class="tag">Osnove · 5/19</div>
+            <h2>Izlazne jedinice</h2>
+            <table>
+                <tr>
+                    <th>Uređaj</th>
+                    <th>Izlaz</th>
+                    <th>Primjena</th>
+                </tr>
+                <tr>
+                    <td>Monitor</td>
+                    <td>Slika i tekst</td>
+                    <td>Rad s programima</td>
+                </tr>
+                <tr>
+                    <td>Projektor</td>
+                    <td>Slika na projekcijskoj površini</td>
+                    <td>Nastava i prezentacije</td>
+                </tr>
+                <tr>
+                    <td>Pisač</td>
+                    <td>Ispis na papir</td>
+                    <td>Dokumenti i fotografije</td>
+                </tr>
+                <tr>
+                    <td>Crtač (plotter)</td>
+                    <td>Veliki nacrti / precizni crteži</td>
+                    <td>Tehnički nacrti</td>
+                </tr>
+                <tr>
+                    <td>Zvučnici i slušalice</td>
+                    <td>Zvuk</td>
+                    <td>Govor, glazba i obavijesti</td>
+                </tr>
+            </table>
+            <footer>Izvori: <a href="https://www.bbc.co.uk/bitesize/guides/zt6pn39/revision/1" target="_blank"
+                    rel="noopener">BBC – ulazne i izlazne jedinice</a></footer>
+        </section>
+        <section class="slide" id="s6" aria-label="Slajd 6">
+            <div class="tag">Osnove · 6/19</div>
+            <h2>Uređaji mogu imati obje uloge</h2>
+            <div class="cards">
+                <article>
+                    <h3>Dodirni zaslon</h3>
+                    <p>ULAZ: dodir prstom.</p>
+                    <p>IZLAZ: slika na zaslonu.</p>
+                </article>
+                <article>
+                    <h3>Višenamjenski uređaj</h3>
+                    <p>Skener je ulazni dio, a pisač izlazni dio istog uređaja.</p>
+                </article>
+            </div>
+            <p class="note">Ulogu određuje smjer podataka, a ne izgled uređaja. Obični monitor bez dodira izlazna je
+                jedinica.</p>
+            <p>Zadatak: objasni ulaz i izlaz pri uporabi bankomata.</p>
+            <footer>Izvori: <a href="https://www.bbc.co.uk/bitesize/guides/zt6pn39/revision/1" target="_blank"
+                    rel="noopener">BBC – ulazne i izlazne jedinice</a></footer>
+        </section>
+        <section class="slide" id="s7" aria-label="Slajd 7">
+            <div class="tag">Monitori · 1/10 · 7/19</div>
+            <h2>Monitor: piksel i matrica zaslona</h2>
+            <p>Monitor je izlazna jedinica koja prikazuje tekst, slike i video.</p>
+            <div class="cards">
+                <article>
+                    <h3>Piksel (pixel)</h3>
+                    <p>Najmanji adresabilni element slike. Piksel se uobičajeno sastoji od crvenog, zelenog i plavog
+                        potpiksela (RGB).</p>
+                    <div class="rgb"><span>R</span><span>G</span><span>B</span></div>
+                </article>
+                <article>
+                    <h3>Matrica zaslona</h3>
+                    <p>Mreža piksela u redcima i stupcima. Matrica 1920 × 1080 sadrži 1920 stupaca i 1080 redaka.</p>
+                    <p>Riječ „matrica” u specifikacijama može označavati i vrstu panela, primjerice IPS.</p>
+                </article>
+            </div>
+            <p class="note">Razlikuj raspored piksela od tehnologije panela.</p>
+            <footer>Izvori: <a
+                    href="https://www.intel.com/content/www/us/en/gaming/resources/everything-you-need-to-know-about-gaming-monitors.html"
+                    target="_blank" rel="noopener">Intel – specifikacije monitora</a></footer>
+        </section>
+        <section class="slide" id="s8" aria-label="Slajd 8">
+            <div class="tag">Monitori · 2/10 · 8/19</div>
+            <h2>Duljina dijagonale i omjer stranica</h2>
+            <div class="cards">
+                <article>
+                    <h3>Dijagonala</h3>
+                    <p>Udaljenost između suprotnih kutova vidljivog zaslona.</p>
+                    <p>Mjeri se u inčima: 1″ = 2,54 cm.</p>
+                    <p>24″ ≈ 61 cm; 27″ ≈ 68,6 cm; 32″ ≈ 81,3 cm.</p>
+                </article>
+                <article>
+                    <h3>Omjer stranica</h3>
+                    <p>Omjer širine i visine, a ne dijagonale.</p>
+                    <ul>
+                        <li>4:3 – stariji zasloni.</li>
+                        <li>16:9 – čest široki format.</li>
+                        <li>16:10 – više visine za rad.</li>
+                        <li>21:9 – oznaka širokih ultrawide zaslona; stvarni omjer ovisi o rezoluciji.</li>
+                    </ul>
+                </article>
+            </div>
+            <p class="note">Jednaka dijagonala ne znači jednaku širinu i visinu ako se omjeri stranica razlikuju.</p>
+            <footer>Izvori: <a
+                    href="https://www.intel.com/content/www/us/en/gaming/resources/everything-you-need-to-know-about-gaming-monitors.html"
+                    target="_blank" rel="noopener">Intel – specifikacije monitora</a></footer>
+        </section>
+        <section class="slide" id="s9" aria-label="Slajd 9">
+            <div class="tag">Monitori · 3/10 · 9/19</div>
+            <h2>Rezolucije: Full HD, 2K i 4K</h2>
+            <p>Rezolucija je broj piksela po širini × broj piksela po visini.</p>
+            <table>
+                <tr>
+                    <th>Naziv</th>
+                    <th>Rezolucija</th>
+                    <th>Napomena</th>
+                </tr>
+                <tr>
+                    <td>HD</td>
+                    <td>1280 × 720</td>
+                    <td>720p</td>
+                </tr>
+                <tr>
+                    <td>Full HD</td>
+                    <td>1920 × 1080</td>
+                    <td>1080p; omjer 16:9</td>
+                </tr>
+                <tr>
+                    <td>DCI 2K</td>
+                    <td>2048 × 1080</td>
+                    <td>Digitalno kino</td>
+                </tr>
+                <tr>
+                    <td>QHD / WQHD</td>
+                    <td>2560 × 1440</td>
+                    <td>1440p; često prodajno nazvan „2K”</td>
+                </tr>
+                <tr>
+                    <td>4K UHD</td>
+                    <td>3840 × 2160</td>
+                    <td>Čest 4K format monitora; 16:9</td>
+                </tr>
+                <tr>
+                    <td>DCI 4K</td>
+                    <td>4096 × 2160</td>
+                    <td>Digitalno kino</td>
+                </tr>
+            </table>
+            <p class="note">„2K” nije precizan sinonim za QHD. Uvijek provjeri broj piksela. 4K UHD ima četiri puta više
+                piksela od Full HD-a.</p>
+            <footer>Izvori: <a href="https://2pop.calarts.edu/technicalsupport/working-in-4k/" target="_blank"
+                    rel="noopener">CalArts – DCI 2K i 4K</a> · <a
+                    href="https://www.intel.com/content/www/us/en/gaming/resources/everything-you-need-to-know-about-gaming-monitors.html"
+                    target="_blank" rel="noopener">Intel – rezolucije monitora</a></footer>
+        </section>
+        <section class="slide" id="s10" aria-label="Slajd 10">
+            <div class="tag">Monitori · 4/10 · 10/19</div>
+            <h2>Gustoća piksela: PPI</h2>
+            <p>PPI (pixels per inch) govori koliko se piksela nalazi po jednom inču duljine zaslona.</p>
+            <div class="formula">PPI = √(širina² + visina²) / dijagonala u inčima</div>
+            <table>
+                <tr>
+                    <th>Dijagonala</th>
+                    <th>Rezolucija</th>
+                    <th>Približno PPI</th>
+                </tr>
+                <tr>
+                    <td>24″</td>
+                    <td>1920 × 1080</td>
+                    <td>92</td>
+                </tr>
+                <tr>
+                    <td>27″</td>
+                    <td>2560 × 1440</td>
+                    <td>109</td>
+                </tr>
+                <tr>
+                    <td>27″</td>
+                    <td>3840 × 2160</td>
+                    <td>163</td>
+                </tr>
+                <tr>
+                    <td>32″</td>
+                    <td>3840 × 2160</td>
+                    <td>138</td>
+                </tr>
+            </table>
+            <p class="note">Uz jednaku rezoluciju veći zaslon ima manju gustoću piksela. Viši PPI omogućuje finiji
+                prikaz detalja; dojam ovisi i o udaljenosti gledanja i skaliranju sučelja.</p>
+            <footer>Izvori: <a
+                    href="https://www.intel.com/content/www/us/en/gaming/resources/everything-you-need-to-know-about-gaming-monitors.html"
+                    target="_blank" rel="noopener">Intel – specifikacije monitora</a></footer>
+        </section>
+        <section class="slide" id="s11" aria-label="Slajd 11">
+            <div class="tag">Monitori · 5/10 · 11/19</div>
+            <h2>Dubina boje</h2>
+            <p>Dubina boje opisuje koliko se razina boje može kodirati. Važno je navesti govori li se o bitovima po
+                kanalu ili ukupno po RGB pikselu.</p>
+            <table>
+                <tr>
+                    <th>Po kanalu RGB</th>
+                    <th>Ukupno</th>
+                    <th>Moguće RGB kombinacije</th>
+                </tr>
+                <tr>
+                    <td>8 bita → 256 razina</td>
+                    <td>24 bita</td>
+                    <td>256³ = 16 777 216</td>
+                </tr>
+                <tr>
+                    <td>10 bita → 1024 razine</td>
+                    <td>30 bita</td>
+                    <td>1024³ = 1 073 741 824</td>
+                </tr>
+            </table>
+            <div class="gradient"></div>
+            <p>Više razina omogućuje glađe prijelaze, primjerice na nebu ili u sjenama, uz manje vidljive pruge
+                (banding).</p>
+            <p class="note">Dubina boje nije isto što i raspon boja (gamut). 8-bitni panel + FRC vremenskim izmjenama
+                približava dodatne nijanse; nije isto što i izvorni 10-bitni panel. Za 10-bitni prikaz potrebna je
+                podrška cijelog lanca.</p>
+            <footer>Izvori: <a href="https://eizovisualsolutions.com/glossary-of-terms/" target="_blank"
+                    rel="noopener">EIZO – boje i prikaz</a></footer>
+        </section>
+        <section class="slide" id="s12" aria-label="Slajd 12">
+            <div class="tag">Monitori · 6/10 · 12/19</div>
+            <h2>Vrijeme odziva i osvježavanje slike</h2>
+            <div class="cards">
+                <article>
+                    <h3>Vrijeme odziva · ms</h3>
+                    <p>Vrijeme potrebno pikselu za promjenu stanja, često mjereno od jedne nijanse sive do druge (GtG).
+                    </p>
+                    <p>Sporije promjene mogu ostavljati trag za objektom u pokretu.</p>
+                </article>
+                <article>
+                    <h3>Osvježavanje · Hz</h3>
+                    <p>Broj osvježavanja zaslona u sekundi.</p>
+                    <p>60 Hz → 60 osvježavanja/s.</p>
+                    <p>144 Hz → 144 osvježavanja/s.</p>
+                    <p>Razmak osvježavanja: 60 Hz ≈ 16,7 ms; 144 Hz ≈ 6,9 ms.</p>
+                </article>
+            </div>
+            <p class="note">1 ms odziva nije isto što i 1 ms ukupnog kašnjenja. Hz monitora nije isto što i FPS koji
+                računalo stvara. GtG i MPRT različite su mjere i ne treba ih izravno uspoređivati.</p>
+            <footer>Izvori: <a
+                    href="https://www.intel.com/content/www/us/en/gaming/resources/everything-you-need-to-know-about-gaming-monitors.html"
+                    target="_blank" rel="noopener">Intel – specifikacije monitora</a></footer>
+        </section>
+        <section class="slide" id="s13" aria-label="Slajd 13">
+            <div class="tag">Monitori · 7/10 · 13/19</div>
+            <h2>Rasvijetljenost i kut gledanja</h2>
+            <div class="cards">
+                <article>
+                    <h3>Svjetlina zaslona</h3>
+                    <p>U specifikacijama se preciznije govori o luminanciji: cd/m², odnosno nitima.</p>
+                    <p>1 nit = 1 cd/m².</p>
+                    <p>Viša vrijednost pomaže vidljivosti u svjetlijoj prostoriji; prejaka svjetlina nije nužno ugodna.
+                    </p>
+                    <p>Vršna HDR svjetlina nije isto što i trajna svjetlina cijelog zaslona.</p>
+                </article>
+                <article>
+                    <h3>Kut gledanja</h3>
+                    <p>Opisuje iz kojih se kutova može gledati zaslon uz zadovoljavajuću sliku.</p>
+                    <p>Često se navodi vodoravni i okomiti kut, npr. 178° / 178°.</p>
+                    <p>Promjene boje i kontrasta mogu biti vidljive i unutar navedenog kuta.</p>
+                </article>
+            </div>
+            <p class="note">„Rasvijetljenost” se često koristi u svakodnevnom govoru, ali osvijetljenost površine mjeri
+                se u luksima (lx), a luminancija zaslona u cd/m².</p>
+            <footer>Izvori: <a
+                    href="https://www.intel.com/content/www/us/en/gaming/resources/everything-you-need-to-know-about-gaming-monitors.html"
+                    target="_blank" rel="noopener">Intel – luminancija</a> · <a
+                    href="https://www.eizoglobal.com/library/basics/difference_in_image_quality/index.html"
+                    target="_blank" rel="noopener">EIZO – kut gledanja</a></footer>
+        </section>
+        <section class="slide" id="s14" aria-label="Slajd 14">
+            <div class="tag">Monitori · 8/10 · 14/19</div>
+            <h2>LCD monitor i vrste matrice</h2>
+            <p>LCD (Liquid Crystal Display) koristi tekuće kristale koji upravljaju prolaskom svjetlosti iz pozadinskog
+                osvjetljenja.</p>
+            <div class="flow"><span>LED pozadinsko svjetlo</span><span>→ LCD sloj i filtri →</span><span>slika</span>
+            </div>
+            <table>
+                <tr>
+                    <th>LCD panel</th>
+                    <th>Uobičajene značajke</th>
+                </tr>
+                <tr>
+                    <td>TN</td>
+                    <td>Brz odziv, ali slabija stabilnost boja pri gledanju pod kutom.</td>
+                </tr>
+                <tr>
+                    <td>IPS</td>
+                    <td>Dobra stabilnost boja i široki kutovi gledanja.</td>
+                </tr>
+                <tr>
+                    <td>VA</td>
+                    <td>Često visok kontrast; kod nekih modela sporiji tamni prijelazi.</td>
+                </tr>
+            </table>
+            <p class="note">„LED monitor” najčešće je LCD s LED pozadinskim osvjetljenjem. TN, IPS i VA vrste su LCD
+                panela, a ne rezolucije. Konkretne performanse ovise o modelu.</p>
+            <footer>Izvori: <a
+                    href="https://www.intel.com/content/www/us/en/gaming/resources/everything-you-need-to-know-about-gaming-monitors.html"
+                    target="_blank" rel="noopener">Intel – LCD paneli</a> · <a
+                    href="https://www.eizoglobal.com/library/basics/difference_in_image_quality/index.html"
+                    target="_blank" rel="noopener">EIZO – usporedba panela</a></footer>
+        </section>
+        <section class="slide" id="s15" aria-label="Slajd 15">
+            <div class="tag">Monitori · 9/10 · 15/19</div>
+            <h2>Plazma monitor i OLED</h2>
+            <div class="cards">
+                <article>
+                    <h3>Plazma (PDP)</h3>
+                    <p>Električno pražnjenje u plinskim ćelijama stvara UV zračenje koje pobuđuje fosfor da emitira
+                        svjetlost.</p>
+                    <ul>
+                        <li>Dobar prikaz pokreta i široki kutovi gledanja.</li>
+                        <li>Veća potrošnja i zagrijavanje; moguć trajni trag statične slike.</li>
+                        <li>Povijesno značajna za velike televizore i zaslone; danas nije uobičajen izbor novog
+                            računalnog monitora.</li>
+                    </ul>
+                </article>
+                <article>
+                    <h3>OLED</h3>
+                    <p>Organic Light-Emitting Diode: organski svjetleći elementi emitiraju svjetlost bez zasebnog
+                        pozadinskog osvjetljenja.</p>
+                    <ul>
+                        <li>Gašenje piksela omogućuje duboku crnu i vrlo visok kontrast.</li>
+                        <li>Vrlo brz odziv i široki kutovi gledanja.</li>
+                        <li>Rizik trajnog zadržavanja slike (burn-in); svjetlina može ovisiti o prikazanom sadržaju.
+                        </li>
+                    </ul>
+                </article>
+            </div>
+            <footer>Izvori: <a
+                    href="https://www.fh-muenster.de/ciw/downloads/personal/juestel/juestel/Em.andnon-em.RGBDisplays_DierkesHuebner_.pdf"
+                    target="_blank" rel="noopener">FH Münster – tehnologije zaslona</a> · <a
+                    href="https://www.rtings.com/monitor/reviews/best/oled" target="_blank" rel="noopener">RTINGS – OLED
+                    monitori</a></footer>
+        </section>
+        <section class="slide" id="s16" aria-label="Slajd 16">
+            <div class="tag">Monitori · 10/10 · 16/19</div>
+            <h2>SED i FED monitori</h2>
+            <p>Obje su tehnologije ravnih zaslona povezane s načelom CRT-a: elektroni udaraju u fosforni sloj koji
+                emitira svjetlost.</p>
+            <div class="cards">
+                <article>
+                    <h3>FED</h3>
+                    <p>Field-Emission Display – zaslon s emisijom elektrona pod djelovanjem električnog polja.</p>
+                    <p>Mreža mikroskopskih emitera oslobađa elektrone prema fosforu u vakuumu.</p>
+                </article>
+                <article>
+                    <h3>SED</h3>
+                    <p>Surface-Conduction Electron-Emitter Display – zaslon s površinski vodljivim elektronskim
+                        emiterima.</p>
+                    <p>Elektroni se emitiraju uz vrlo uski procjep u vodljivom sloju, a zatim ubrzavaju prema fosforu.
+                    </p>
+                </article>
+            </div>
+            <p class="note">Razlika je ponajprije u načinu emisije elektrona. SED su razvijali Canon i Toshiba.
+                Obećavali su kontrast, široke kutove i brz odziv, ali nisu postali uobičajeni komercijalni računalni
+                monitori. Učimo ih kao razvojne i povijesne tehnologije.</p>
+            <footer>Izvori: <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/9781118798706.hdi023"
+                    target="_blank" rel="noopener">Wiley – FED i SED</a> · <a
+                    href="https://www.pcmag.com/encyclopedia/term/surface-conduction-electron-emitter-display"
+                    target="_blank" rel="noopener">PCMag – SED</a></footer>
+        </section>
+        <section class="slide" id="s17" aria-label="Slajd 17">
+            <div class="tag">Vježba · 17/19</div>
+            <h2>Pročitaj specifikaciju monitora</h2>
+            <div class="spec">27″ · 2560 × 1440 · 16:9 · IPS · 144 Hz · 1 ms GtG · 350 cd/m² · 8-bit RGB</div>
+            <ol>
+                <li>Kolika je dijagonala i koji je omjer stranica?</li>
+                <li>Je li ovo Full HD, QHD ili 4K UHD?</li>
+                <li>Što označavaju IPS, 144 Hz i 1 ms?</li>
+                <li>Koja vrijednost opisuje svjetlinu?</li>
+                <li>Kolika je približna gustoća piksela?</li>
+            </ol>
+            <details>
+                <summary>Prikaži rješenje</summary>
+                <p>27″ (≈ 68,6 cm), 16:9; QHD; IPS je vrsta LCD panela; 144 Hz je osvježavanje; 1 ms GtG je navedeno
+                    vrijeme promjene nijanse piksela; 350 cd/m² je luminancija; gustoća je približno 109 PPI. 8-bit RGB
+                    ovdje znači 8 bita po kanalu, odnosno 24 bita ukupno.</p>
+            </details>
+            <footer>Nastavni primjer / zadatak</footer>
+        </section>
+        <section class="slide" id="s18" aria-label="Slajd 18">
+            <div class="tag">Provjera · 18/19</div>
+            <h2>Kratka provjera znanja</h2>
+            <div id="quiz"></div><button id="check">Provjeri odgovore</button>
+            <p id="result" role="status"></p>
+            <footer>Nastavni primjer / zadatak</footer>
+        </section>
+        <section class="slide" id="s19" aria-label="Slajd 19">
+            <div class="tag">Sažetak · 19/19</div>
+            <h2>Sažetak za ponavljanje</h2>
+            <ul>
+                <li>Ulazni uređaji šalju podatke računalu, a izlazni prikazuju ili predaju rezultate.</li>
+                <li>Dodirni zaslon ima ulaznu i izlaznu ulogu.</li>
+                <li>Dijagonala, rezolucija, omjer stranica i PPI opisuju različita svojstva zaslona.</li>
+                <li>Odziv se mjeri u ms, osvježavanje u Hz, a luminancija u cd/m².</li>
+                <li>LCD regulira pozadinsko svjetlo; OLED emitira vlastito svjetlo.</li>
+                <li>Plazma, SED i FED važne su za razumijevanje razvoja zaslona.</li>
+            </ul>
+            <p class="note">Završni zadatak: opiši put podataka od mikrofona do snimke koju slušaš na slušalicama.</p>
+            <footer>Nastavni primjer / zadatak</footer>
+        </section>
+    </main>
+    <div class="help">Tipke ← i → mijenjaju slajd · Home / End: prvi / zadnji · Sve radi lokalno, bez interneta (osim
+        poveznica na izvore).</div>
+    <script>
+        const slides = [...document.querySelectorAll('.slide')], jump = document.querySelector('#jump'); let pos = 0; slides.forEach((s, i) => { let o = document.createElement('option'); o.value = i; o.textContent = (i + 1) + '. ' + s.querySelector('h2').textContent; jump.append(o) }); function show(i) { pos = Math.max(0, Math.min(slides.length - 1, i)); slides.forEach((s, n) => s.classList.toggle('active', n === pos)); jump.value = pos; document.querySelector('#bar').style.width = ((pos + 1) / slides.length * 100) + '%'; document.querySelector('#prev').disabled = pos === 0; document.querySelector('#next').disabled = pos === slides.length - 1; history.replaceState(null, '', '#s' + (pos + 1)); if (document.body.classList.contains('all')) slides[pos].scrollIntoView({ behavior: 'smooth', block: 'center' }); } document.querySelector('#prev').onclick = () => show(pos - 1); document.querySelector('#next').onclick = () => show(pos + 1); jump.onchange = () => show(+jump.value); document.querySelector('#mode').onclick = function () { document.body.classList.toggle('all'); this.textContent = document.body.classList.contains('all') ? 'Prezentacija' : 'Svi slajdovi'; }; document.querySelector('#full').onclick = async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen() } catch (e) { alert('Preglednik ne dopušta puni zaslon.') } }; document.addEventListener('keydown', e => { if (['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'SUMMARY'].includes(e.target.tagName)) return; if (e.key === 'ArrowRight') { e.preventDefault(); show(pos + 1) } if (e.key === 'ArrowLeft') { e.preventDefault(); show(pos - 1) } if (e.key === 'Home') { e.preventDefault(); show(0) } if (e.key === 'End') { e.preventDefault(); show(slides.length - 1) } }); show((parseInt(location.hash.slice(2)) || 1) - 1);
+        const qs = [['Koji je uređaj ulazni?', ['Mikrofon', 'Zvučnik', 'Monitor'], 0], ['Dodirni zaslon je…', ['samo ulazni', 'samo izlazni', 'ulazni i izlazni'], 2], ['Rezolucija 4K UHD je…', ['1920 × 1080', '3840 × 2160', '2560 × 1440'], 1], ['Osvježavanje se mjeri u…', ['ms', 'Hz', 'cd/m²'], 1], ['Veći zaslon uz istu rezoluciju ima…', ['veći PPI', 'isti PPI', 'manji PPI'], 2], ['Koji zaslon ne treba zasebno pozadinsko osvjetljenje?', ['LCD', 'OLED', 'IPS LCD'], 1]]; document.querySelector('#quiz').innerHTML = qs.map((q, i) => '<div class="q"><p>' + (i + 1) + '. ' + q[0] + '</p>' + q[1].map((a, j) => '<label><input type="radio" name="q' + i + '" value="' + j + '"> ' + a + '</label>').join('') + '</div>').join(''); document.querySelector('#check').onclick = () => { let correct = 0, answered = 0; qs.forEach((q, i) => { const a = document.querySelector('input[name="q' + i + '"]:checked'); if (a) { answered++; if (+a.value === q[2]) correct++; } }); document.querySelector('#result').textContent = 'Rezultat: ' + correct + ' / ' + qs.length + '. Odgovoreno: ' + answered + ' / ' + qs.length + '. Točni odgovori: ' + qs.map((q, i) => (i + 1) + '. ' + q[1][q[2]]).join('; ') + '.'; };
+    </script>
+</body>
+
+</html>
