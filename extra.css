@@ -16,6 +16,10 @@
     --ssbjj-secondary: #034ea2;
 }
 
+.none {
+    display: none;
+}
+
 .flex {
     display: flex;
 }
