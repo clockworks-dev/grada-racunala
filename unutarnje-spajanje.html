@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="hr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description"
+        content="Interaktivna nastavna prezentacija za 1. razred tehničara za računarstvo: unutarnje spajanje komponenata, montaža i sigurnost.">
+    <title>Unutarnje spajanje komponenata — 1. razred</title>
+    <link rel="stylesheet" href="extra.css">
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        :root {
+            --blue: #034ea2;
+            --yellow: #ffe640;
+            --ink: #15243c;
+            --muted: #51627b
+        }
+
+        body {
+            margin: 0;
+            background: #edf2f8;
+            color: var(--ink);
+            font: 19px/1.55 system-ui, sans-serif
+        }
+
+        header {
+            background: var(--blue);
+            color: white;
+            padding: 12px 4vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 5
+        }
+
+        header span {
+            font-size: 14px
+        }
+
+        button,
+        select {
+            font: inherit;
+            border-radius: 9px;
+            border: 1px solid #bac9dd;
+            padding: 9px 14px;
+            background: white;
+            color: var(--ink);
+            cursor: pointer
+        }
+
+        button:hover {
+            background: #e1eafa
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid #d28e00;
+            outline-offset: 3px
+        }
+
+        button:disabled {
+            opacity: .4;
+            cursor: default
+        }
+
+        .accent {
+            background: var(--yellow)
+        }
+
+        main {
+            max-width: 1120px;
+            margin: 28px auto 100px;
+            padding: 0 24px
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            padding: 40px 48px;
+            border-radius: 18px;
+            box-shadow: 0 10px 32px #16315912;
+            min-height: 65vh
+        }
+
+        .slide.active {
+            display: block
+        }
+
+        .tag {
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: var(--blue);
+            font-weight: 700
+        }
+
+        h1 {
+            font-size: clamp(28px, 3.4vw, 45px);
+            line-height: 1.15;
+            margin: 12px 0 28px
+        }
+
+        h3 {
+            font-size: 22px;
+            margin: 0 0 10px;
+            color: var(--blue)
+        }
+
+        p {
+            margin: 16px 0
+        }
+
+        .lead {
+            font-size: 28px
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px
+        }
+
+        .cards article {
+            background: #f1f6fc;
+            padding: 23px;
+            border-radius: 12px
+        }
+
+        ul,
+        ol {
+            padding-left: 27px
+        }
+
+        li {
+            margin: 10px 0
+        }
+
+        .call,
+        .ask,
+        .danger {
+            padding: 16px 20px;
+            border-left: 5px solid var(--yellow);
+            background: #fffbe2;
+            border-radius: 5px
+        }
+
+        .danger {
+            border-color: #c52c3d;
+            background: #fff0f1
+        }
+
+        .ask {
+            border-color: var(--blue);
+            background: #edf5ff
+        }
+
+        .source {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 17px
+        }
+
+        td,
+        th {
+            text-align: left;
+            padding: 13px;
+            border-bottom: 1px solid #d7e2f0
+        }
+
+        th {
+            background: #eaf2fc
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 12px 4vw;
+            background: #ffffffed;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #cdd8e5
+        }
+
+        #progress {
+            height: 5px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background: var(--blue);
+            z-index: 9;
+            transition: width .2s
+        }
+
+        #jump {
+            max-width: 340px;
+            font-size: 15px
+        }
+
+        .map {
+            padding: 22px;
+            background: #f1f6fc;
+            border-radius: 14px
+        }
+
+        .node {
+            background: var(--blue);
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            letter-spacing: 1px
+        }
+
+        .arrows {
+            padding: 16px 24px;
+            line-height: 1.9
+        }
+
+        .check {
+            display: block;
+            padding: 10px;
+            border-bottom: 1px solid #e0e7f0
+        }
+
+        input[type=checkbox],
+        input[type=radio] {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            accent-color: var(--blue)
+        }
+
+        fieldset {
+            border: 1px solid #cbd9eb;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 20px
+        }
+
+        legend {
+            padding: 0 8px;
+            font-weight: 600
+        }
+
+        fieldset label {
+            display: block;
+            padding: 7px
+        }
+
+        .feedback {
+            font-size: 16px
+        }
+
+        .ok {
+            color: #166344
+        }
+
+        .bad {
+            color: #ad2433
+        }
+
+        .rules {
+            font-size: 27px;
+            color: var(--blue)
+        }
+
+        .sources {
+            font-size: 17px
+        }
+
+        a {
+            color: var(--blue)
+        }
+
+        body.all .slide {
+            display: block;
+            margin-bottom: 28px
+        }
+
+        body.all footer {
+            position: static
+        }
+
+        body.all main {
+            margin-bottom: 20px
+        }
+
+        @media(max-width:700px) {
+            body {
+                font-size: 16px
+            }
+
+            .slide {
+                padding: 24px 20px
+            }
+
+            .cards {
+                grid-template-columns: 1fr
+            }
+
+            main {
+                padding: 0 12px;
+                margin-top: 14px
+            }
+
+            header {
+                flex-wrap: wrap
+            }
+
+            header span {
+                display: none
+            }
+
+            table {
+                font-size: 13px
+            }
+
+            td,
+            th {
+                padding: 8px
+            }
+
+            footer {
+                gap: 6px;
+                padding: 10px
+            }
+
+            #jump {
+                max-width: 145px
+            }
+
+            footer button {
+                padding: 8px
+            }
+
+            h1 {
+                font-size: 29px
+            }
+        }
+
+        @media print {
+
+            header,
+            footer,
+            #progress,
+            #grade,
+            #resetQuiz {
+                display: none !important
+            }
+
+            body {
+                background: white;
+                font-size: 12pt
+            }
+
+            main {
+                max-width: none;
+                margin: 0;
+                padding: 0
+            }
+
+            .slide {
+                display: block !important;
+                box-shadow: none;
+                border-radius: 0;
+                min-height: 0;
+                padding: 10mm;
+                break-after: page
+            }
+
+            .slide:last-child {
+                break-after: auto
+            }
+
+            .cards {
+                grid-template-columns: 1fr 1fr
+            }
+
+            h1 {
+                font-size: 25pt
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none
+            }
+
+            .source {
+                font-size: 9pt
+            }
+
+            fieldset {
+                break-inside: avoid
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>RAČUNARSTVO / 1. RAZRED <span> • montaža i sigurnost</span></div>
+        <div><button id="all">Prikaži sve</button> <button id="full" aria-label="Cijeli zaslon">⛶</button>
+            <!-- <button id="print">Ispis / PDF</button> -->
+        </div>
+    </header>
+    <main>
+        <section class="slide active" id="s1" aria-label="Slajd 1">
+            <div class="tag">SKLOPOVLJE RAČUNALA / 01</div>
+            <h1>Unutarnje spajanje komponenata</h1>
+            <p class="lead">Od praznog kućišta do prvog sigurnog uključivanja.</p>
+            <div class="cards">
+                <article>
+                    <h3>1. razred</h3>
+                    <p>Tehničar za računarstvo</p>
+                </article>
+
+                <article>
+                    <h3>Proizvođači</h3>
+                    <p>Svaki proizvođač opreme može imati posebna pravila i upute. Ono što vrijedi kod jednog nije nužno
+                        pravilo kod drugog.</p>
+                </article>
+            </div>
+            <p class="call">Ključno pravilo: provjeri oznaku, položaj i upute — nikada ne spajaj silom.</p>
+        </section>
+        <section class="slide" id="s2" aria-label="Slajd 2">
+            <div class="tag">ISHODI UČENJA / 02</div>
+            <h1>Što ćeš moći nakon nastave?</h1>
+            <ul>
+                <li>Razlikovati podatkovne i naponske priključke.</li>
+                <li>Prepoznati ATX, EPS, PCIe, SATA i priključke kućišta.</li>
+                <li>Opisati siguran i smislen redoslijed montaže.</li>
+                <li>Provjeriti računalo prije prvog uključivanja.</li>
+                <li>Objasniti zašto su ESD zaštita i odstojnici važni.</li>
+            </ul>
+            <p class="ask">Uvodno pitanje: zašto nije dovoljno da utikač „izgleda kao da odgovara”?</p>
+        </section>
+        <section class="slide" id="s3" aria-label="Slajd 3">
+            <div class="tag">SIGURNOSNE MJERE / 03</div>
+            <h1>Prvo sigurnost, tek onda odvijač</h1>
+            <ol>
+                <li>Isključi operacijski sustav, stanje mirovanja nije dovoljno.</li>
+                <li>Isključi prekidač napajanja ako postoji i izvuci mrežni kabel iz računala.</li>
+                <li>Odspoji vanjske uređaje. Prema servisnim uputama zadrži tipku uključivanja radi pražnjenja
+                    preostalog naboja sustava.</li>
+                <li>Pripremi ESD zaštitu i tek tada otvori kućište.</li>
+            </ol>
+            <p class="danger">Napajanje (PSU) ne otvaramo! Njegovi kondenzatori mogu zadržati opasan napon i nakon
+                odspajanja. Pritiskanje tipke ne čini unutrašnjost PSU-a sigurnom.</p>
+            <p class="source">Izvor: Dell, sigurnosne mjere [1].</p>
+        </section>
+        <section class="slide" id="s4" aria-label="Slajd 4">
+            <div class="tag">SIGURNOSNE MJERE / 04</div>
+            <h1>ESD: nevidljivo pražnjenje, stvarna šteta</h1>
+            <p>ESD je elektrostatsko pražnjenje. Statički naboj s tijela ili predmeta može oštetiti osjetljive
+                elektroničke dijelove, čak i kada ne osjetiš iskru.</p>
+            <div class="cards">
+                <article>
+                    <h3>Ispravno</h3>
+                    <ul>
+                        <li>Koristi ESD podlogu i narukvicu spojene prema uputama na predviđenu ESD točku radnog mjesta.
+                        </li>
+                        <li>Drži pločice za rubove.</li>
+                        <li>Čuvaj komponente u antistatičkoj ambalaži do ugradnje.</li>
+                    </ul>
+                </article>
+                <article>
+                    <h3>Izbjegni</h3>
+                    <ul>
+                        <li>Dodirivanje kontakata i pinova.</li>
+                        <li>Rad na tepihu i nepotrebno kretanje.</li>
+                        <li>Odlaganje dijelova na nasumične plastične površine.</li>
+                    </ul>
+                </article>
+            </div>
+            <p class="call">Ne ostavljaj računalo priključeno na mrežni napon radi „uzemljenja”. ESD radno mjesto
+                ukoliko postoji, potrebno je prije rada pripremiti. Dodir odspojenog kućišta nije trajno uzemljenje.</p>
+            <p class="source">Izvor: Dell [1].</p>
+        </section>
+        <section class="slide" id="s5" aria-label="Slajd 5">
+            <div class="tag">POSTUPCI MONTAŽE / 05</div>
+            <h1>Priprema radnog mjesta</h1>
+            <div class="cards">
+                <article>
+                    <h3>Pribor</h3>
+                    <ul>
+                        <li>Križni odvijač odgovarajuće veličine.</li>
+                        <li>Posudica za vijke i vezice za kabele.</li>
+                        <li>ESD oprema i dobra rasvjeta.</li>
+                        <li>Upute matične ploče, kućišta, hladnjaka i napajanja.</li>
+                    </ul>
+                </article>
+                <article>
+                    <h3>Provjera kompatibilnosti</h3>
+                    <ul>
+                        <li>Procesor, socket i podrška BIOS-a.</li>
+                        <li>Vrsta RAM-a i podržani utori.</li>
+                        <li>Format matične ploče i kućišta.</li>
+                        <li>Snaga, priključci PSU-a i prostor za GPU/hladnjak.</li>
+                    </ul>
+                </article>
+            </div>
+            <p>Suha i čista radna površina, bez pića, labavog nakita i rasutih vijaka.</p>
+            <p class="source">Osnova postupka: Intel [2].</p>
+        </section>
+        <section class="slide" id="s6" aria-label="Slajd 6">
+            <div class="tag">UNUTARNJI PRIKLJUČCI / 06</div>
+            <h1>Karta unutarnjih spojeva</h1>
+            <p>Pojednostavljena shema — stvarni raspored i broj priključaka ovise o modelu.</p>
+            <div class="map">
+                <div class="node">NAPAJANJE (PSU)</div>
+                <div class="arrows">↓ ATX 24-pin → matična ploča<br>↓ EPS CPU → napajanje procesora<br>↓ PCIe / 12V-2x6
+                    → grafička kartica, ako je potrebno<br>↓ SATA napajanje → SATA SSD / HDD</div>
+                <div class="node">MATIČNA PLOČA</div>
+                <div class="arrows">↔ CPU • RAM • M.2 SSD • PCIe kartice<br>↔ SATA podatkovni kabel → SATA SSD /
+                    HDD<br>↔ F_PANEL • USB • HD_AUDIO • ventilatori</div>
+            </div>
+            <p class="ask">Koji uređaj iz ove sheme obično treba dva zasebna kabela? SATA disk: podatkovni i naponski.
+            </p>
+            <p class="source">Osnova: Intel [2], Corsair [3–4].</p>
+        </section>
+        <section class="slide" id="s7" aria-label="Slajd 7">
+            <div class="tag">UNUTARNJI PRIKLJUČCI / 07</div>
+            <h1>Napajanje: četiri važne skupine</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Oznaka</th>
+                        <th>Namjena</th>
+                        <th>Na što pazimo?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ATX 24-pin</td>
+                        <td>Matična ploča</td>
+                        <td>Poravnaj kopču, umetni do kraja</td>
+                    </tr>
+                    <tr>
+                        <td>CPU / EPS 4+4-pin</td>
+                        <td>CPU naponski sklop na ploči</td>
+                        <td>Nije isto što i PCIe 6+2!</td>
+                    </tr>
+                    <tr>
+                        <td>PCIe 6+2-pin</td>
+                        <td>Napajanje grafičke kartice</td>
+                        <td>Koristi potreban broj prema uputama GPU-a</td>
+                    </tr>
+                    <tr>
+                        <td>SATA napajanje</td>
+                        <td>SATA SSD, HDD i neki dodaci</td>
+                        <td>Široki priključak s L-profilom</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Neke grafičke kartice koriste 16-pinski 12V-2x6 ili 12VHPWR. Postupak spajanja i vođenja kabela provjeri
+                u uputama konkretnog modela.</p>
+            <p class="danger">CPU/EPS i PCIe kabeli nisu zamjenjivi. Modularne kabele koristi samo ako je potvrđena
+                kompatibilnost s točnim modelom PSU-a — čak i unutar iste marke.</p>
+            <p class="source">Izvori: Intel [2], Corsair [3–4].</p>
+        </section>
+        <section class="slide" id="s8" aria-label="Slajd 8">
+            <div class="tag">POSTUPCI MONTAŽE / 08</div>
+            <h1>Diskovi: SATA nije isto što i M.2</h1>
+            <div class="cards">
+                <article>
+                    <h3>SATA SSD / HDD</h3>
+                    <p>Učvrsti u odgovarajuće ležište.</p>
+                    <p>1. Uži SATA podatkovni kabel vodi do matične ploče.<br>2. Širi SATA naponski kabel vodi do PSU-a.
+                    </p>
+                    <p>Oba priključka imaju prepoznatljiv L-profil.</p>
+                </article>
+                <article>
+                    <h3>M.2 SSD</h3>
+                    <p>Umeće se izravno u odgovarajući utor na ploči i učvršćuje predviđenim mehanizmom.</p>
+                    <p>Ne treba zaseban SATA podatkovni ni naponski kabel.</p>
+                    <p>M.2 je format, podržani SATA/PCIe protokol ovisi o SSD-u i utoru. Provjeri priručnik.</p>
+                </article>
+            </div>
+            <p class="source">Osnova postupka: Intel [2], pojedinosti ovise o priručniku ploče.</p>
+        </section>
+        <section class="slide" id="s9" aria-label="Slajd 9">
+            <div class="tag">POSTUPCI MONTAŽE / 09</div>
+            <h1>Prednja ploča, USB i ventilatori</h1>
+            <table>
+                <tr>
+                    <th>Priključak</th>
+                    <th>Što spajaš?</th>
+                    <th>Napomena</th>
+                </tr>
+                <tr>
+                    <td>F_PANEL / JFP</td>
+                    <td>PWR_SW, RESET_SW, LED</td>
+                    <td>Raspored pinova čitaj u priručniku.</td>
+                </tr>
+                <tr>
+                    <td>USB 2.0 / USB 3.x / USB-C</td>
+                    <td>Prednje USB utičnice</td>
+                    <td>Različiti oblici, ne savijaj pinove.</td>
+                </tr>
+                <tr>
+                    <td>HD_AUDIO</td>
+                    <td>Prednje audio utičnice</td>
+                    <td>Ne miješaj s USB priključkom.</td>
+                </tr>
+                <tr>
+                    <td>CPU_FAN</td>
+                    <td>Ventilator hladnjaka procesora</td>
+                    <td>Za AIO pumpu slijedi posebne upute.</td>
+                </tr>
+                <tr>
+                    <td>SYS_FAN / CHA_FAN</td>
+                    <td>Ventilatori kućišta</td>
+                    <td>Provjeri broj i raspored pinova.</td>
+                </tr>
+            </table>
+            <p class="call">Tipke PWR_SW i RESET_SW obično nemaju polaritet. LED priključci imaju + i −. Ne koristi
+                univerzalni raspored pinova napamet.</p>
+            <p class="source">Osnova: Intel [2], konačan raspored određuje priručnik konkretne ploče.</p>
+        </section>
+        <section class="slide" id="s10" aria-label="Slajd 10">
+            <div class="tag">POSTUPCI MONTAŽE / 10</div>
+            <h1>Plan montaže: od ploče do kabela</h1>
+            <ol class="steps">
+                <li>Priprema, provjera kompatibilnosti i sigurnosti.</li>
+                <li>CPU → RAM → M.2 SSD → hladnjak, koliko to dopuštaju upute i pristup vijcima.</li>
+                <li>Kućište: odstojnici i I/O lim ako nije integriran.</li>
+                <li>Ugradnja ploče, PSU-a i SATA diskova.</li>
+                <li>Grafička kartica i ostale kartice.</li>
+                <li>Naponski i podatkovni kabeli, prednja ploča i ventilatori.</li>
+                <li>Kontrola → Provjera → prvo uključivanje.</li>
+            </ol>
+            <p class="call">To je primjer redoslijeda, ne univerzalni recept. Veličina kućišta i način ugradnje
+                hladnjaka mogu promijeniti slijed.</p>
+            <p class="source">Intelovu vodič [2].</p>
+        </section>
+        <section class="slide" id="s11" aria-label="Slajd 11">
+            <div class="tag">POSTUPCI MONTAŽE / 11</div>
+            <h1>Procesor i hladnjak: precizno, bez sile</h1>
+            <ol>
+                <li>Otvori mehanizam podnožja prema uputama, ne dodiruj pinove ni kontakte.</li>
+                <li>Poravnaj oznaku kuta procesora s oznakom podnožja.</li>
+                <li>Položi procesor bez prisilnog utiskivanja i zatvori mehanizam.</li>
+                <li>Provjeri je li na hladnjaku zaštitna folija koju treba ukloniti.</li>
+                <li>Ako pasta nije tvornički nanesena, nanesi je prema uputama proizvođača hladnjaka.</li>
+                <li>Učvrsti hladnjak propisanim redoslijedom i spoji ventilator na CPU_FAN.</li>
+            </ol>
+            <p class="danger">Ne pokreći računalo bez pravilno montiranog hladnjaka procesora. Ne dodaj pastu preko već
+                nanesene tvorničke paste.</p>
+            <p class="source">Osnova: Intel [2], konkretna montaža prema uputama CPU-a i hladnjaka.</p>
+        </section>
+        <section class="slide" id="s12" aria-label="Slajd 12">
+            <div class="tag">POSTUPCI MONTAŽE / 12</div>
+            <h1>RAM i M.2: poravnaj, umetni, učvrsti</h1>
+            <div class="cards">
+                <article>
+                    <h3>RAM</h3>
+                    <ol>
+                        <li>Odaberi utore iz priručnika, za dva modula često A2 i B2, ali ne uvijek.</li>
+                        <li>Otvori pomične kopče.</li>
+                        <li>Poravnaj urez na modulu s izbočenjem u utoru.</li>
+                        <li>Ravnomjerno pritisni dok se kopče ne zatvore.</li>
+                    </ol>
+                </article>
+                <article>
+                    <h3>M.2</h3>
+                    <ol>
+                        <li>Provjeri podržani tip i duljinu SSD-a.</li>
+                        <li>Postavi odstojnik na odgovarajuće mjesto.</li>
+                        <li>Umetni SSD pod kutom prema uputama.</li>
+                        <li>Spusti ga i učvrsti vijkom ili kopčom bez savijanja.</li>
+                    </ol>
+                </article>
+            </div>
+            <p class="ask">Zašto RAM ne možemo pravilno umetnuti u oba smjera?</p>
+            <p class="source">Osnova: Intel [2], položaji i mehanizmi ovise o ploči.</p>
+        </section>
+        <section class="slide" id="s13" aria-label="Slajd 13">
+            <div class="tag">POSTUPCI MONTAŽE / 13</div>
+            <h1>Matična ploča: važni su odstojnici</h1>
+            <p>Odstojnici drže ploču na predviđenoj udaljenosti od metalnog nosača kućišta.</p>
+            <ol>
+                <li>Usporedi rupe ploče s položajima odstojnika.</li>
+                <li>Ukloni višak odstojnika ispod područja bez montažne rupe.</li>
+                <li>Ugradi zaseban I/O lim ako je potreban.</li>
+                <li>Pažljivo spusti ploču i poravnaj otvore.</li>
+                <li>Učvrsti odgovarajućim vijcima bez pretjeranog zatezanja.</li>
+            </ol>
+            <p class="danger">Pogrešno postavljen odstojnik može dodirnuti vodove s donje strane ploče i izazvati kratki
+                spoj.</p>
+            <p class="source">Izvor: Intel [2].</p>
+        </section>
+        <section class="slide" id="s14" aria-label="Slajd 14">
+            <div class="tag">POSTUPCI MONTAŽE / 14</div>
+            <h1>PSU, grafička kartica i uredni kabeli</h1>
+            <ol>
+                <li>Učvrsti zatvoreno napajanje u kućište, ventilaciju usmjeri prema predviđenom otvoru.</li>
+                <li>Ugradi GPU u preporučeni PCIe utor i učvrsti nosač, težu karticu podupri ako je potrebno.</li>
+                <li>Spoji ATX, CPU/EPS i potrebne GPU naponske kabele.</li>
+                <li>Spoji diskove, prednju ploču, USB, audio i ventilatore.</li>
+                <li>Vodi kabele dalje od lopatica ventilatora, oštrih rubova i mjesta pritiska bočne stranice.</li>
+            </ol>
+            <p>Hvataj utikač, ne povlači žice. Kopče otpuštaj prije izvlačenja. Potpuno utakni priključke, ne radi oštre
+                pregibe uz konektor.</p>
+            <p class="source">Osnova: Intel [2], Corsair [3–4].</p>
+        </section>
+        <section class="slide" id="s15" aria-label="Slajd 15">
+            <div class="tag">SIGURNOSNA PROVJERA / 15</div>
+            <h1>Kontrolna lista prije uključivanja</h1>
+            <p>Označi provjereno. Lista je pomagalo, ovisno o tipovima uređaja na kojima radimo dobro je prije početka
+                rada napraviti kontrolnu listu. S vremenom listu mijenjamo i nadopunjavamo.</p>
+            <div id="checklist"><label class="check"><input type="checkbox"> Mrežni kabel je odspojen tijekom
+                    pregleda.</label><label class="check"><input type="checkbox"> Odstojnici odgovaraju montažnim
+                    rupama, nema slobodnih vijaka.</label><label class="check"><input type="checkbox"> CPU hladnjak je
+                    učvršćen i ventilator pravilno spojen.</label><label class="check"><input type="checkbox"> RAM i
+                    grafička kartica pravilno su umetnuti i osigurani.</label><label class="check"><input
+                        type="checkbox"> ATX, CPU/EPS i potrebni GPU priključci spojeni su do kraja.</label><label
+                    class="check"><input type="checkbox"> Diskovi i priključci kućišta spojeni su prema
+                    priručniku.</label><label class="check"><input type="checkbox"> Kabeli ne dodiruju ventilatore i
+                    nisu prignječeni.</label><label class="check"><input type="checkbox"> Prekontrolirali smo
+                    napravljeno, dodatno provjerili spojeve.</label></div>
+            <p id="checkStatus" class="call" aria-live="polite"></p>
+        </section>
+        <section class="slide" id="s16" aria-label="Slajd 16">
+            <div class="tag">POSTUPCI MONTAŽE / 16</div>
+            <h1>Prvo uključivanje i UEFI</h1>
+            <ol>
+                <li>Nakon odobrenja spoji zaslon, tipkovnicu i mrežni kabel. Ako koristiš zasebnu grafičku karticu,
+                    zaslon u pravilu spoji na nju.</li>
+                <li>Uključi napajanje i računalo. Ne dodiruj unutarnje dijelove dok je pod naponom.</li>
+                <li>Provjeri pojavljuje li se slika i završi li POST — početna provjera sklopovlja.</li>
+                <li>Uđi u UEFI tipkom navedenom na zaslonu ili u priručniku.</li>
+                <li>Provjeri prepoznati CPU, količinu RAM-a, diskove i temperaturu procesora.</li>
+            </ol>
+            <p class="call">Prvo pokretanje nekih sustava može trajati dulje zbog inicijalizacije memorije. Ako osjetiš
+                miris paljevine, vidiš dim ili neuobičajeno brzo raste temperatura: odmah prekini napajanje.</p>
+            <p class="source">Osnova: Intel [2].</p>
+        </section>
+        <section class="slide" id="s17" aria-label="Slajd 17">
+            <div class="tag">DIJAGNOSTIKA / 17</div>
+            <h1>Nema slike? Dijagnosticiraj sustavno</h1>
+            <table>
+                <tr>
+                    <th>Simptom</th>
+                    <th>Što provjeriti?</th>
+                </tr>
+                <tr>
+                    <td>Nema nikakve reakcije</td>
+                    <td>Vanjski dovod, prekidač PSU-a, ATX, EPS i položaj PWR_SW.</td>
+                </tr>
+                <tr>
+                    <td>Ventilatori rade, nema slike</td>
+                    <td>Ulaz zaslona i kabel, odgovarajući videoizlaz, RAM, GPU i njegovo napajanje.</td>
+                </tr>
+                <tr>
+                    <td>Disk nije prepoznat</td>
+                    <td>SATA napajanje i podatkovni kabel ili podršku M.2 utora, UEFI postavke prema priručniku.</td>
+                </tr>
+                <tr>
+                    <td>Brzo pregrijavanje / gašenje</td>
+                    <td>Prekinuti rad! Provjeriti hladnjak, foliju, pastu i CPU_FAN.</td>
+                </tr>
+            </table>
+            <p class="danger">Prije svakog ponovnog umetanja komponente ili kabela: ugasi sustav, odspoji mrežni kabel i
+                primijeni ESD mjere. Mijenjaj jednu stvar odjednom.</p>
+            <p>LED dijagnostičke oznake i zvučne kodove tumači prema priručniku konkretne ploče.</p>
+        </section>
+        <section class="slide" id="s18" aria-label="Slajd 18">
+            <div class="tag">PRAKTIČNI RAD / 18</div>
+            <h1>Vježba: sastavi i obrazloži</h1>
+            <div class="cards">
+                <article>
+                    <h3>Osoba A: monter</h3>
+                    <p>Priprema radno mjesto, prepoznaje komponente i izvodi odobrene postupke.</p>
+                </article>
+                <article>
+                    <h3>Osoba B: kontrolor</h3>
+                    <p>Čita upute, provjerava oznake i vodi kontrolnu listu. Nakon polovice zamijenite uloge.</p>
+                </article>
+            </div>
+            <ol>
+                <li>Bez mrežnog napajanja pronađite pet različitih priključaka.</li>
+                <li>Zapišite naziv, namjenu i sigurnosnu provjeru za svaki.</li>
+                <li>Spojite zadane kabele ili izvedite simulaciju na fotografiji/shemi.</li>
+                <li>Objasnite razliku EPS–PCIe te SATA podaci–SATA napajanje.</li>
+                <li>Pripremite računalo za kontrolu.</li>
+            </ol>
+            <p class="call">Vrednovanje: sigurnost, točnost spojeva, urednost i objašnjenje postupka. Nesigurna radnja
+                znači zaustavljanje vježbe, ne pokušaj pod naponom.</p>
+        </section>
+        <section class="slide" id="s19" aria-label="Slajd 19">
+            <div class="tag">KRATKI KVIZ / 19</div>
+            <h1>Provjeri razumijevanje</h1>
+            <p>Odgovori na šest pitanja, a zatim provjeri rezultate.</p>
+            <form id="quiz"></form><button id="grade" class="accent">Provjeri odgovore</button><button id="resetQuiz"
+                class="mx-2">Pokušaj ponovno</button>
+            <p id="score" aria-live="polite"></p>
+        </section>
+        <section class="slide" id="s20" aria-label="Slajd 20">
+            <div class="tag">PONAVLJANJE / 20</div>
+            <h1>Tri pravila koja nosiš u radionicu</h1>
+            <div class="rules">
+                <p>01 / Bez mrežnog napajanja tijekom rada.</p>
+                <p>02 / Oznake i priručnik važniji su od pretpostavke.</p>
+                <p>03 / Pregled prije prvog uključivanja.</p>
+            </div>
+            <p class="ask">Napiši jedan naponski spoj, jedan podatkovni spoj i jednu pogrešku koja može
+                oštetiti računalo.</p>
+        </section>
+        <section class="slide" id="s21" aria-label="Slajd 21">
+            <div class="tag">IZVORI I NAPOMENE / 21</div>
+            <h1>Izvori i prilagodba materijala</h1>
+            <ol class="sources">
+                <li><a href="https://www.dell.com/support/kbdoc/en-us/000137973/safety-precautions-when-working-with-electrical-equipment"
+                        target="_blank" rel="noopener">Dell: Safety Precautions When Working With Electronic and
+                        Electrical Equipment</a> — odspajanje i ESD.</li>
+                <li><a href="https://www.intel.com/content/www/us/en/gaming/resources/how-to-build-a-gaming-pc.html"
+                        target="_blank" rel="noopener">Intel: How to Build a Gaming PC</a> — postupak sastavljanja.</li>
+                <li><a href="https://www.corsair.com/us/en/explorer/diy-builder/power-supply-units/can-i-use-a-pci-e-cable-in-the-8-pin-motherboard-plug/"
+                        target="_blank" rel="noopener">Corsair: CPU i PCIe kabeli</a> — razlike i namjena.</li>
+                <li><a href="https://www.corsair.com/us/en/explorer/diy-builder/power-supply-units/are-psu-cables-universal/"
+                        target="_blank" rel="noopener">Corsair: Are PSU Cables Universal?</a> — modularni kabeli.</li>
+            </ol>
+            <p>Za stvarnu opremu konačnu prednost imaju sigurnosne i montažne upute proizvođača točnog modela.
+                Predviđeno za stolna računala, nije servisni vodič za prijenosnike ili unutrašnjost PSU-a.</p>
+            <p>Uvijek je
+                potrebno prije početka rada provjeriti službenu dokumentaciju koja dolazi uz opremu!</p>
+        </section>
+    </main>
+    <footer><button id="prev" aria-label="Prethodni slajd">←</button><span id="count" aria-live="polite"></span><select
+            id="jump" aria-label="Odaberi slajd"></select><button id="next" aria-label="Sljedeći slajd">→</button>
+    </footer>
+    <div id="progress"></div>
+    <script>const slides = [...document.querySelectorAll('.slide')], jump = document.querySelector('#jump'); let current = 0; slides.forEach((s, i) => { let o = document.createElement('option'); o.value = i; o.textContent = `${i + 1}. ${s.querySelector('h1').textContent}`; jump.append(o) }); function show(i) { current = Math.max(0, Math.min(slides.length - 1, i)); slides.forEach((s, n) => s.classList.toggle('active', n === current)); jump.value = current; document.querySelector('#count').textContent = `${current + 1} / ${slides.length}`; document.querySelector('#prev').disabled = current === 0; document.querySelector('#next').disabled = current === slides.length - 1; document.querySelector('#progress').style.width = ((current + 1) / slides.length * 100) + '%'; history.replaceState(null, '', '#' + (current + 1)); window.scrollTo(0, 0) } document.querySelector('#prev').onclick = () => show(current - 1); document.querySelector('#next').onclick = () => show(current + 1); jump.onchange = () => show(+jump.value); document.addEventListener('keydown', e => { if (['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].includes(e.target.tagName) || document.body.classList.contains('all')) return; if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); show(current + 1) } if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(current - 1) } if (e.key === 'Home') show(0); if (e.key === 'End') show(slides.length - 1) }); document.querySelector('#all').onclick = () => { let a = document.body.classList.toggle('all'); document.querySelector('#all').textContent = a ? 'Prikaz slajdova' : 'Prikaži sve' }; document.querySelector('#print').onclick = () => window.print(); document.querySelector('#full').onclick = () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.() }; function check() { let boxes = [...document.querySelectorAll('#checklist input')], n = boxes.filter(x => x.checked).length; document.querySelector('#checkStatus').textContent = `Provjereno: ${n} / ${boxes.length}. ` + (n === boxes.length ? 'Lista je popunjena — uključivanje samo kada smo sigurni da je sve dobro napravljeno.' : 'Nastavi provjeru, ne uključuj računalo.') } document.querySelectorAll('#checklist input').forEach(x => x.onchange = check); check(); const quizData = [["Računalo je ugašeno, ali mrežni kabel je priključen. Smiješ li spajati RAM?", ["Da, jer se ventilatori ne vrte.", "Ne, prvo odspoji mrežni kabel.", "Da, ako nosiš rukavice."], 1, "Ugašeno računalo može imati prisutno standby napajanje."], ["Koji kabel ide na CPU naponski priključak ploče?", ["PCIe 6+2", "SATA", "CPU/EPS 4+4"], 2, "CPU/EPS nije zamjenjiv s PCIe kabelom."], ["Što obično treba SATA SSD?", ["Podatkovni i naponski kabel.", "Samo podatkovni kabel.", "Samo USB kabel."], 0, "SATA podatkovni kabel vodi do ploče, a naponski do PSU-a."], ["Gdje provjeravaš raspored F_PANEL pinova?", ["Na bilo kojoj slici s interneta.", "U priručniku točnog modela ploče.", "Prema boji kućišta."], 1, "Raspored nije isti na svim pločama."], ["Što radiš s viškom odstojnika ispod ploče?", ["Ostavim ga radi čvrstoće.", "Prekrijem papirom.", "Uklonim ga prije montaže."], 2, "Odstojnik smije biti samo na predviđenom montažnom mjestu."], ["Smiješ li prenijeti modularne kabele iz starog PSU-a?", ["Samo ako je dokumentirana kompatibilnost s novim modelom.", "Uvijek, ako utikač odgovara.", "Uvijek, ako je ista marka."], 0, "Jednak oblik ili marka ne jamče jednak raspored napona."]]; const form = document.querySelector('#quiz'); quizData.forEach((q, i) => { let f = document.createElement('fieldset'); f.innerHTML = `<legend>${i + 1}. ${q[0]}</legend>` + q[1].map((a, j) => `<label><input type="radio" name="q${i}" value="${j}"> ${a}</label>`).join('') + `<p class="feedback" id="f${i}" aria-live="polite"></p>`; form.append(f) }); document.querySelector('#grade').onclick = () => { let points = 0; quizData.forEach((q, i) => { let selected = form.querySelector(`input[name=q${i}]:checked`), ok = selected && +selected.value === q[2]; if (ok) points++; let f = document.querySelector('#f' + i); f.className = 'feedback ' + (ok ? 'ok' : 'bad'); f.textContent = (ok ? 'Točno. ' : selected ? 'Netočno. ' : 'Nije odgovoreno. ') + q[3] + ' Točan odgovor: ' + q[1][q[2]] }); document.querySelector('#score').textContent = `Rezultat: ${points} / ${quizData.length}.` }; document.querySelector('#resetQuiz').onclick = () => { form.reset(); document.querySelectorAll('.feedback').forEach(x => x.textContent = ''); document.querySelector('#score').textContent = '' }; show((parseInt(location.hash.slice(1)) || 1) - 1);</script>
+</body>
+
+</html>

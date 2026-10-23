@@ -53,6 +53,11 @@
     margin-left: auto;
 }
 
+.mx-2 {
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
 .primary {
     color: var(--primary);
 }
