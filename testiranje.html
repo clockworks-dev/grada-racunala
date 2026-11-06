@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="hr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="slides-format" content="viewport">
+    <title>Građa računala – mjerenje performansi i testni alati</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            margin: 0;
+            background: #eff5fc;
+            color: #15253e;
+            font-family: Arial, sans-serif
+        }
+
+        body {
+            font-size: clamp(16px, 1.55vw, 24px)
+        }
+
+        header {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4vw;
+            border-bottom: 1px solid #d4dfed;
+            background: white
+        }
+
+        header span {
+            font-size: 14px;
+            color: #536783
+        }
+
+        .slide {
+            display: none;
+            min-height: calc(100vh - 142px);
+            padding: 4vh 5vw 3vh;
+            position: relative
+        }
+
+        .slide.active {
+            display: block
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            color: #516d93;
+            font-size: .65em
+        }
+
+        h1 {
+            font-size: clamp(30px, 3.4vw, 54px);
+            letter-spacing: -.04em;
+            line-height: 1.06;
+            margin: .4em 0
+        }
+
+        h2 {
+            font-size: 1.3em
+        }
+
+        h3 {
+            font-size: 1.05em;
+            margin-top: 0
+        }
+
+        p,
+        li {
+            line-height: 1.5
+        }
+
+        li {
+            margin: .5em 0
+        }
+
+        a {
+            color: #175cb1;
+            overflow-wrap: anywhere
+        }
+
+        .lead {
+            color: #526b8b;
+            margin: 0 0 1.4em;
+            font-size: 1em
+        }
+
+        .hero {
+            font-size: clamp(32px, 4.5vw, 70px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin: 5vh 0
+        }
+
+        .hero em {
+            color: #245fd4;
+            font-style: normal
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px
+        }
+
+        article,
+        .callout {
+            background: white;
+            border: 1px solid #d7e3f2;
+            border-radius: 16px;
+            padding: 22px
+        }
+
+        .callout {
+            border-left: 5px solid #6d65df;
+            margin: 20px 0;
+            font-size: .86em;
+            background: #f5f2ff
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: .86em
+        }
+
+        td,
+        th {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid #dce5f0;
+            line-height: 1.4
+        }
+
+        th {
+            background: #e0eafb
+        }
+
+        footer {
+            padding: 14px 5vw;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: white;
+            border-top: 1px solid #d4dfed;
+            position: sticky;
+            bottom: 0;
+            z-index: 5
+        }
+
+        button,
+        select {
+            border: 1px solid #c6d5e8;
+            border-radius: 9px;
+            padding: 10px 16px;
+            background: white;
+            color: #163866;
+            font-size: 14px;
+            cursor: pointer
+        }
+
+        button:hover {
+            background: #e4efff
+        }
+
+        #progress {
+            height: 4px;
+            background: #516bef;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 7;
+            transition: width .2s
+        }
+
+        .source {
+            font-size: 12px;
+            color: #62728b;
+            margin-top: 24px
+        }
+
+        .visual {
+            position: relative;
+            min-height: 360px;
+            height: 46vh;
+            background: #e2eaf6;
+            border-radius: 18px
+        }
+
+        .visual img {
+            position: absolute;
+            left: 5%;
+            top: 5%;
+            width: 90%;
+            height: 79%;
+            object-fit: contain;
+            cursor: zoom-in
+        }
+
+        .visual .credit {
+            position: absolute;
+            bottom: 4%;
+            left: 5%;
+            right: 5%;
+            font-size: 12px;
+            line-height: 1.4
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 32px;
+            align-items: start
+        }
+
+        .split li {
+            font-size: .9em
+        }
+
+        .sourcegrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            font-size: .8em
+        }
+
+        .worksheet {
+            padding: 16px 24px;
+            background: white;
+            border-radius: 12px;
+            font-size: .87em
+        }
+
+        .quiz p {
+            margin: .8em 0 .3em
+        }
+
+        details {
+            font-size: .8em;
+            background: white;
+            border: 1px solid #d6e2ef;
+            padding: 10px;
+            border-radius: 8px
+        }
+
+        dialog {
+            max-width: 94vw;
+            border: none;
+            border-radius: 14px;
+            padding: 20px
+        }
+
+        dialog::backdrop {
+            background: #07172dcc
+        }
+
+        dialog img {
+            max-width: 85vw;
+            max-height: 80vh;
+            object-fit: contain
+        }
+
+        #counter {
+            font-size: 14px;
+            margin-left: auto
+        }
+
+        .overview .slide {
+            display: block;
+            min-height: 0;
+            border-bottom: 3px solid #dce6f3;
+            padding-bottom: 40px
+        }
+
+        .overview footer {
+            position: sticky
+        }
+
+        .overview .slide h1 {
+            font-size: 36px
+        }
+
+        @media(max-width:850px) {
+
+            .split,
+            .sourcegrid {
+                grid-template-columns: 1fr
+            }
+
+            .visual {
+                height: 380px
+            }
+
+            .slide {
+                padding: 25px 6vw
+            }
+
+            header span {
+                display: none
+            }
+
+            footer {
+                padding: 10px;
+                gap: 5px
+            }
+
+            select {
+                max-width: 35vw
+            }
+
+            td,
+            th {
+                padding: 9px;
+                font-size: 14px
+            }
+
+            .cards {
+                grid-template-columns: 1fr
+            }
+
+            body {
+                font-size: 18px
+            }
+        }
+
+        @media print {
+
+            header,
+            footer,
+            #progress,
+            button,
+            dialog {
+                display: none !important
+            }
+
+            .slide,
+            .slide.active {
+                display: block;
+                min-height: 0;
+                break-after: page;
+                padding: 12mm;
+                font-size: 12pt
+            }
+
+            .slide h1 {
+                font-size: 26pt
+            }
+
+            .lead {
+                font-size: 12pt
+            }
+
+            .visual {
+                height: 75mm;
+                min-height: 0
+            }
+
+            .callout {
+                padding: 10px
+            }
+
+            .source {
+                font-size: 8pt
+            }
+
+            body {
+                background: white
+            }
+
+            .worksheet-only .slide {
+                display: none
+            }
+
+            .worksheet-only #s17 {
+                display: block
+            }
+
+            details {
+                display: block
+            }
+
+            details>* {
+                display: block
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>GRAĐA RAČUNALA</div><span>1. razred · tehničar za računarstvo</span><button onclick="fullscreen()">Puni
+            zaslon</button>
+    </header>
+    <main>
+        <section class="slide active" id="s0" aria-label="Slajd 1: Koliko je brzo tvoje računalo?">
+            <div class="eyebrow">Građa računala / 01</div>
+            <h1>Koliko je brzo tvoje računalo?</h1>
+            <p class="lead">Građa računala · 1. razred · tehničar za računarstvo</p>
+            <div class="hero">Mjerenje performansi<br><em>i provjera stabilnosti</em></div>
+            <p>UserBenchmark · OCCT · MemTest86 · CrystalDiskMark</p>
+            <div class="callout">Znači li brže računalo ujedno i ispravno računalo?</div>
+        </section>
+        <section class="slide " id="s1" aria-label="Slajd 2: Što ćemo naučiti?">
+            <div class="eyebrow">Građa računala / 02</div>
+            <h1>Što ćemo naučiti?</h1>
+            <p class="lead">Ishodi učenja</p>
+            <ol>
+                <li>Razlikovati benchmark, test stabilnosti i dijagnostiku.</li>
+                <li>Pripremiti računalo i pokrenuti UserBenchmark.</li>
+                <li>Protumačiti rezultate CPU-a, GPU-a, RAM-a i pohrane.</li>
+                <li>Odabrati odgovarajući alat za procesor, memoriju i disk.</li>
+                <li>Zapisati uvjete mjerenja i obrazložiti zaključak.</li>
+            </ol>
+        </section>
+        <section class="slide " id="s2" aria-label="Slajd 3: Brzina nije isto što i stabilnost">
+            <div class="eyebrow">Građa računala / 03</div>
+            <h1>Brzina nije isto što i stabilnost</h1>
+            <p class="lead">Tri različita pitanja</p>
+            <div class="cards">
+                <article>
+                    <h3>Benchmark</h3>
+                    <p>Koliko brzo računalo obavlja zadani posao? Rezultat je broj bodova, brzina ili vrijeme.</p>
+                </article>
+                <article>
+                    <h3>Test stabilnosti</h3>
+                    <p>Radi li sustav pouzdano pod opterećenjem? Tražimo pogreške, rušenja i pregrijavanje.</p>
+                </article>
+                <article>
+                    <h3>Dijagnostika</h3>
+                    <p>Koji dio sustava može uzrokovati problem? Kombiniramo testove i opažanja.</p>
+                </article>
+            </div>
+            <div class="callout">Visok rezultat nije dokaz da računalo nema kvar.</div>
+            <div class="source">Izvor sadržaja: <a href="https://www.ocbase.com/personal-features" target="_blank"
+                    rel="noopener">https://www.ocbase.com/personal-features</a></div>
+        </section>
+        <section class="slide " id="s3" aria-label="Slajd 4: Četiri alata u našoj radionici">
+            <div class="eyebrow">Građa računala / 04</div>
+            <h1>Četiri alata u našoj radionici</h1>
+            <p class="lead">Odabir alata prema zadatku</p>
+            <table>
+                <tr>
+                    <th>Alat</th>
+                    <th>Komponente</th>
+                    <th>Glavna namjena</th>
+                </tr>
+                <tr>
+                    <td>UserBenchmark</td>
+                    <td>CPU, GPU, RAM, disk</td>
+                    <td>Brzi usporedni pregled</td>
+                </tr>
+                <tr>
+                    <td>OCCT</td>
+                    <td>CPU, RAM, GPU i drugo</td>
+                    <td>Opterećenje i stabilnost</td>
+                </tr>
+                <tr>
+                    <td>MemTest86</td>
+                    <td>RAM / memorijski podsustav</td>
+                    <td>Otkrivanje pogrešaka</td>
+                </tr>
+                <tr>
+                    <td>CrystalDiskMark</td>
+                    <td>SSD, HDD, USB pohrana</td>
+                    <td>Brzina čitanja i pisanja</td>
+                </tr>
+            </table>
+            <p>Potrebno je prethodno provjeriti licencu svakog alata. OCCT Personal namijenjen je
+                osobnoj uporabi, a ne pretpostavljamo da pokriva sve vidove upotrebe.</p>
+            <div class="source">Izvor sadržaja: <a href="https://www.userbenchmark.com/Software" target="_blank"
+                    rel="noopener">https://www.userbenchmark.com/Software</a></div>
+        </section>
+        <section class="slide " id="s4" aria-label="Slajd 5: Priprema prije mjerenja">
+            <div class="eyebrow">Građa računala / 05</div>
+            <h1>Priprema prije mjerenja</h1>
+            <p class="lead">Jednaki uvjeti daju korisniju usporedbu</p>
+            <ol>
+                <li>Spremi rad i napravi sigurnosnu kopiju važnih podataka.</li>
+                <li>Zapiši modele komponenti, operacijski sustav i verziju alata.</li>
+                <li>Zatvori nepotrebne aplikacije, ne isključuj sigurnosnu zaštitu.</li>
+                <li>Provjeri ventilaciju, prijenosnik priključi na napajanje.</li>
+                <li>Ne pokreći više testova istodobno.</li>
+                <li>Prije ponavljanja pričekaj da se uvjeti stabiliziraju.</li>
+            </ol>
+            <div class="callout">Školsko pravilo: bez promjena napona, overclockinga i BIOS/UEFI postavki bez
+                nastavnika.</div>
+            <div class="source">Izvor sadržaja: <a
+                    href="https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119"
+                    target="_blank"
+                    rel="noopener">https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119</a>
+            </div>
+        </section>
+        <section class="slide " id="s5" aria-label="Slajd 6: UserBenchmark: što mjeri?">
+            <div class="eyebrow">Građa računala / 06</div>
+            <h1>UserBenchmark: što mjeri?</h1>
+            <p class="lead">Brzi pregled više komponenti</p>
+            <div class="split">
+                <div>
+                    <ul>
+                        <li>CPU: cjelobrojne, decimalne i druge računske zadatke.</li>
+                        <li>GPU: 3D grafičke simulacije.</li>
+                        <li>RAM: propusnost i latenciju.</li>
+                        <li>Pohrana: čitanje, pisanje i mješovite pristupe podacima.</li>
+                    </ul>
+                    <p>Rezultati se prikazuju na web-stranici i uspoređuju s bazom korisničkih mjerenja.</p>
+                    <div class="callout">Službena domena za ovaj alat: userbenchmark.com. Ne preuzimaj alat s domena
+                        sličnog naziva.</div>
+                </div>
+                <div class="visual"><img
+                        src="https://d2u1z1lopyfwlx.cloudfront.net/thumbnails/839e1186-2f5e-575e-80e1-6ea18b439bd5/63785b77-1c87-5d5e-8626-34c9ab0e3396.jpg"
+                        alt="UserBenchmark – primjer sučelja" loading="lazy" onclick="zoom(this)"
+                        onerror="this.style.display='none';this.parentElement.querySelector('.credit').prepend('Slika nije dostupna. ')">
+                    <div class="credit">Ilustracija sučelja · <a href="https://userbenchmark.en.lo4d.com/screenshots"
+                            target="_blank" rel="noopener">Izvor slike: UserBenchmark – primjer sučelja</a><br>Klik na
+                        sliku za povećanje.</div>
+                </div>
+            </div>
+            <div class="source">Izvor sadržaja: <a href="https://www.userbenchmark.com/Software" target="_blank"
+                    rel="noopener">https://www.userbenchmark.com/Software</a></div>
+        </section>
+        <section class="slide " id="s6" aria-label="Slajd 7: UserBenchmark: preuzimanje i pokretanje">
+            <div class="eyebrow">Građa računala / 07</div>
+            <h1>UserBenchmark: preuzimanje i pokretanje</h1>
+            <p class="lead">„Instalacija” ovisi o aktualnom izdanju</p>
+            <ol>
+                <li>Otvori službenu stranicu <a href="https://www.userbenchmark.com/Software" target="_blank"
+                        rel="noopener">userbenchmark.com/Software</a>.</li>
+                <li>Preuzmi službeni program, ne koristi oglase za preuzimanje.</li>
+                <li>Pokreni preuzetu datoteku i prati upute aktualnog izdanja.</li>
+                <li>Ako se prikaže instalacijski postupak, pažljivo provjeri lokaciju i korake. Prijenosna izdanja mogu
+                    raditi bez klasične instalacije.</li>
+                <li>Ako se traži pretplata ili pristup nije dostupan, ne zaobilazi ograničenje: koristi drugi slični
+                    alat.</li>
+            </ol>
+            <p>Izgled sučelja, dostupnost i uvjeti korištenja mogu se promijeniti.</p>
+            <div class="source">Izvor sadržaja: <a
+                    href="https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119"
+                    target="_blank"
+                    rel="noopener">https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119</a>
+            </div>
+        </section>
+        <section class="slide " id="s7" aria-label="Slajd 8: UserBenchmark: tijek mjerenja">
+            <div class="eyebrow">Građa računala / 08</div>
+            <h1>UserBenchmark: tijek mjerenja</h1>
+            <p class="lead">Od provjere do izvještaja</p>
+            <ol>
+                <li>Pokreni PreBench ako ga izdanje nudi: pregled početnog stanja.</li>
+                <li>Pokreni benchmark i pričekaj završetak svih testova.</li>
+                <li>Ne radi druge zadatke dok mjerenje traje.</li>
+                <li>Otvori izvještaj putem „Open Benchmark Results” ili slične naredbe.</li>
+                <li>Zapiši rezultate, uvjete i poveznicu.</li>
+            </ol>
+            <div class="callout">Ako rezultat nedostaje ili je test prekinut, to nije rezultat 0. Zabilježi „nije
+                izmjereno”.</div>
+            <div class="source">Izvor sadržaja: <a
+                    href="https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119"
+                    target="_blank"
+                    rel="noopener">https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119</a>
+            </div>
+        </section>
+        <section class="slide " id="s8" aria-label="Slajd 9: Kako čitati rezultat?">
+            <div class="eyebrow">Građa računala / 09</div>
+            <h1>Kako čitati rezultat?</h1>
+            <p class="lead">Bodovi, postotci i percentili nisu isto</p>
+            <ul>
+                <li>Gaming / Desktop / Workstation: zbirne procjene prema metodologiji alata, a ne izravno izmjeren FPS
+                    svake igre.</li>
+                <li>Rezultat komponente: relativna ocjena, 100 % nije univerzalni maksimum.</li>
+                <li>Percentil: položaj među usporedivim mjerenjima iste komponente.</li>
+                <li>„Below expectations”: razlog za dodatnu provjeru, ne gotova dijagnoza kvara.</li>
+            </ul>
+            <div class="callout">80. percentil približno znači rezultat viši od 80 % usporedivih mjerenja. Ne znači
+                „komponenta je 80 % ispravna”.</div>
+            <div class="source">Izvor sadržaja: <a
+                    href="https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119"
+                    target="_blank"
+                    rel="noopener">https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119</a>
+            </div>
+        </section>
+        <section class="slide " id="s9" aria-label="Slajd 10: CPU i GPU: protumači prije zaključka">
+            <div class="eyebrow">Građa računala / 10</div>
+            <h1>CPU i GPU: protumači prije zaključka</h1>
+            <p class="lead">Tražimo moguća objašnjenja</p>
+            <div class="cards">
+                <article>
+                    <h3>CPU — procesor</h3>
+                    <p>Usporedi točan model i slične uvjete. Provjeri pozadinske procese, temperaturu i ponašanje takta
+                        pod opterećenjem.</p>
+                </article>
+                <article>
+                    <h3>GPU — grafički procesor</h3>
+                    <p>Provjeri koji je GPU testiran. Na prijenosniku rezultat integrirane grafike ne opisuje zasebnu
+                        grafičku karticu.</p>
+                </article>
+            </div>
+            <p>Niži rezultat može biti povezan s ograničenjima napajanja, hlađenjem ili postavkama, a tek dodatni
+                testovi
+                pomažu razlučiti uzrok.</p>
+            <div class="callout">Usporedba različitih modela zahtijeva više testova i stvarne zadatke. Jedna zbirna
+                ocjena nije dovoljna za kupnju.</div>
+            <div class="source">Izvor sadržaja: <a
+                    href="https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119"
+                    target="_blank"
+                    rel="noopener">https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119</a>
+            </div>
+        </section>
+        <section class="slide " id="s10" aria-label="Slajd 11: RAM i pohrana: različite vrste brzine">
+            <div class="eyebrow">Građa računala / 11</div>
+            <h1>RAM i pohrana: različite vrste brzine</h1>
+            <p class="lead">Kapacitet nije isto što i performanse</p>
+            <div class="cards">
+                <article>
+                    <h3>RAM</h3>
+                    <p>Propusnost opisuje količinu prenesenih podataka u jedinici vremena, latencija kašnjenje pristupa.
+                        Za
+                        latenciju je manje u pravilu bolje.</p>
+                    <p>Konfiguracija kanala i postavke memorije utječu na rezultat. Pažljivo prilikom promjena postavki.
+                    </p>
+                </article>
+                <article>
+                    <h3>SSD / HDD</h3>
+                    <p>Čitanje i pisanje mjere različite radnje. Sekvencijalni i nasumični pristup predstavljaju
+                        različita opterećenja.</p>
+                    <p>Brz disk nije nužno zdrav disk: benchmark nije provjera svih podataka i kvarova.</p>
+                </article>
+            </div>
+            <div class="source">Izvor sadržaja: <a
+                    href="https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119"
+                    target="_blank"
+                    rel="noopener">https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119</a>
+            </div>
+        </section>
+        <section class="slide " id="s11" aria-label="Slajd 12: OCCT: testiranje procesora">
+            <div class="eyebrow">Građa računala / 12</div>
+            <h1>OCCT: testiranje procesora</h1>
+            <p class="lead">Prati stabilnost, ne samo broj bodova</p>
+            <div class="split">
+                <div>
+                    <ol>
+                        <li>Provjeri licencu i odabere CPU ili CPU + RAM test.</li>
+                        <li>Zapiši odabrani profil i trajanje, a za demonstraciju dogovorite kratko nadzirano
+                            ispitivanje.
+                        </li>
+                        <li>Prati temperaturu, opterećenje, takt i prijavljene pogreške.</li>
+                        <li>Prekini test kod pregrijavanja, rušenja ili neuobičajenog ponašanja.</li>
+                        <li>Zabilježi rezultat i ograničenja trajanja testa.</li>
+                    </ol>
+                    <div class="callout">CPU test može stvarati izrazito veliko toplinsko opterećenje. Nema jedne
+                        sigurne temperaturne granice za sve procesore: potrebno je provjeriti specifikaciju modela.
+                    </div>
+                </div>
+                <div class="visual"><img
+                        src="https://d2u1z1lopyfwlx.cloudfront.net/thumbnails/a21983d1-4464-53f7-ba52-bbf25d4fcff1/42ea3fb6-ff8a-529c-8cb2-ececfac84791.jpg"
+                        alt="OCCT – primjer sučelja" loading="lazy" onclick="zoom(this)"
+                        onerror="this.style.display='none';this.parentElement.querySelector('.credit').prepend('Slika nije dostupna. ')">
+                    <div class="credit">Ilustracija sučelja · <a href="https://www.snapfiles.com/screenshots/occt.htm"
+                            target="_blank" rel="noopener">Izvor slike: OCCT – primjer sučelja</a><br>Klik na sliku za
+                        povećanje.</div>
+                </div>
+            </div>
+            <div class="source">Izvor sadržaja: <a href="https://www.ocbase.com/personal-features" target="_blank"
+                    rel="noopener">https://www.ocbase.com/personal-features</a></div>
+        </section>
+        <section class="slide " id="s12" aria-label="Slajd 13: MemTest86: traženje pogrešaka RAM-a">
+            <div class="eyebrow">Građa računala / 13</div>
+            <h1>MemTest86: traženje pogrešaka RAM-a</h1>
+            <p class="lead">Pokreće se s USB-a, izvan Windowsa</p>
+            <ol>
+                <li>Potrebno je preuzeti MemTest86 sa službene stranice.</li>
+                <li>Priprema zasebnog USB-a za pokretanje. Izrada pokretačkog medija može obrisati sadržaj USB-a:
+                    najprije
+                    sigurnosna kopija i provjera odabira.</li>
+                <li>U UEFI izborniku odabire se pokretanje s tog USB-a.</li>
+                <li>Pokreće se test i prati prolazi te broj pogrešaka.</li>
+                <li>Bilježi trajanje, broj prolaza i izvještaj.</li>
+            </ol>
+            <div class="callout">Pogreške upućuju na problem memorijskog podsustava, ali ne dokazuju same po sebi koji
+                je modul neispravan. Nula pogrešaka u jednom testu nije jamstvo trajne ispravnosti.</div>
+            <div class="source">Izvor sadržaja: <a href="https://www.memtest86.com/memtest86.html" target="_blank"
+                    rel="noopener">https://www.memtest86.com/memtest86.html</a></div>
+        </section>
+        <section class="slide " id="s13" aria-label="Slajd 14: CrystalDiskMark: testiranje pohrane">
+            <div class="eyebrow">Građa računala / 14</div>
+            <h1>CrystalDiskMark: testiranje pohrane</h1>
+            <p class="lead">Mjerimo čitanje i pisanje</p>
+            <div class="split">
+                <div>
+                    <ol>
+                        <li>Preuzmi alat sa službene stranice Crystal Dew World.</li>
+                        <li>Odaberi ispravan disk, provjeri ima li dovoljno slobodnog prostora.</li>
+                        <li>Za kratku demonstraciju: npr. 1 prolaz i testna datoteka 1 GiB.</li>
+                        <li>Pokreni „All” ili pojedini test, pa pričekaj završetak.</li>
+                        <li>Zapiši verziju, pogon, veličinu testa i dobivene vrijednosti.</li>
+                    </ol>
+                    <div class="callout">Test pisanja zapisuje podatke i troši dio životnog vijeka SSD-a/USB memorije.
+                        <strong><em>Ne ponavljamo test nepotrebno! Skraćujemo životni vijek naše
+                                komponente!</em></strong>
+                    </div>
+                </div>
+                <div class="visual"><img
+                        src="https://d2u1z1lopyfwlx.cloudfront.net/thumbnails/bffe272c-8fda-51d7-80d7-4f0db17febc8/63785b77-1c87-5d5e-8626-34c9ab0e3396.jpg"
+                        alt="CrystalDiskMark – primjer rezultata" loading="lazy" onclick="zoom(this)"
+                        onerror="this.style.display='none';this.parentElement.querySelector('.credit').prepend('Slika nije dostupna. ')">
+                    <div class="credit">Ilustracija sučelja · <a href="https://crystaldiskmark.en.lo4d.com/screenshots"
+                            target="_blank" rel="noopener">Izvor slike: CrystalDiskMark – primjer rezultata</a><br>Klik
+                        na sliku za povećanje.</div>
+                </div>
+            </div>
+            <div class="source">Izvor sadržaja: <a href="https://crystalmark.info/en/software/crystaldiskmark/"
+                    target="_blank" rel="noopener">https://crystalmark.info/en/software/crystaldiskmark/</a></div>
+        </section>
+        <section class="slide " id="s14" aria-label="Slajd 15: Kako čitati CrystalDiskMark?">
+            <div class="eyebrow">Građa računala / 15</div>
+            <h1>Kako čitati CrystalDiskMark?</h1>
+            <p class="lead">MB/s, SEQ i RND4K</p>
+            <table>
+                <tr>
+                    <th>Oznaka</th>
+                    <th>Značenje</th>
+                    <th>Primjer uporabe</th>
+                </tr>
+                <tr>
+                    <td>Read / Write</td>
+                    <td>Čitanje / pisanje</td>
+                    <td>Učitavanje / spremanje</td>
+                </tr>
+                <tr>
+                    <td>SEQ</td>
+                    <td>Sekvencijalni pristup</td>
+                    <td>Velike povezane datoteke</td>
+                </tr>
+                <tr>
+                    <td>RND4K</td>
+                    <td>Nasumični blokovi od 4 KiB</td>
+                    <td>Brojni mali pristupi</td>
+                </tr>
+                <tr>
+                    <td>Q / T</td>
+                    <td>Dubina reda / broj dretvi</td>
+                    <td>Različito paralelno opterećenje</td>
+                </tr>
+                <tr>
+                    <td>MB/s</td>
+                    <td>Milijuni bajtova u sekundi</td>
+                    <td>Veća vrijednost = brži prijenos u tom testu</td>
+                </tr>
+            </table>
+            <p>Uspoređuj iste postavke i istu glavnu verziju alata. Sekvencijalna brzina ne opisuje sama cijelo
+                korisničko iskustvo.</p>
+            <div class="source">Izvor sadržaja: <a href="https://crystalmark.info/en/software/crystaldiskmark/"
+                    target="_blank" rel="noopener">https://crystalmark.info/en/software/crystaldiskmark/</a></div>
+        </section>
+        <section class="slide " id="s15" aria-label="Slajd 16: Primjer: brojevi traže kontekst">
+            <div class="eyebrow">Građa računala / 16</div>
+            <h1>Primjer: brojevi traže kontekst</h1>
+            <p class="lead">Izmišljeni podatci za vježbu — nisu referentne vrijednosti</p>
+            <table>
+                <tr>
+                    <th>Opažanje</th>
+                    <th>Oprezan zaključak</th>
+                    <th>Sljedeća provjera</th>
+                </tr>
+                <tr>
+                    <td>CPU: 20. percentil</td>
+                    <td>Niži rezultat od većine istog modela</td>
+                    <td>Pozadinski rad, uvjeti, nadzirani test</td>
+                </tr>
+                <tr>
+                    <td>Disk: SEQ read 500 MB/s</td>
+                    <td>Brzina u određenom testu</td>
+                    <td>Model, sučelje i postavke testa</td>
+                </tr>
+                <tr>
+                    <td>RAM: 0 pogrešaka</td>
+                    <td>Nije nađena pogreška u tom izvođenju</td>
+                    <td>Trajanje i broj prolaza</td>
+                </tr>
+                <tr>
+                    <td>OCCT: prijavljena pogreška</td>
+                    <td>Problem stabilnosti u tim uvjetima</td>
+                    <td>Potrebna je daljnja dijagnostika</td>
+                </tr>
+            </table>
+        </section>
+        <section class="slide " id="s16" aria-label="Slajd 17: Praktična vježba u paru">
+            <div class="eyebrow">Građa računala / 17</div>
+            <h1>Praktična vježba u paru</h1>
+            <p class="lead">Jedan učenik mjeri, drugi vodi zapisnik</p>
+            <ol>
+                <li>Zapišite konfiguraciju i uvjete rada računala.</li>
+                <li>Pokrenite UserBenchmark ako je pristup dopušten i dostupan.</li>
+                <li>Protumačite po jedan podatak za CPU, GPU, RAM i pohranu.</li>
+                <li>CrystalDiskMarkom izmjerite disk postavke.</li>
+                <li>OCCT i pokretanje MemTest86 pratite rezultate.</li>
+                <li>Napišite zaključak koji razlikuje mjerenje od pretpostavke.</li>
+            </ol>
+            <p>Nemate dopuštenje za pokretanje alata? Potrebno je pogledati postavke alata, te prava koja trenutni
+                korisnik posjeduje.</p><button onclick="printWorksheet()">Ispiši prazan radni list</button>
+        </section>
+        <section class="slide " id="s17" aria-label="Slajd 18: Zapisnik mjerenja">
+            <div class="eyebrow">Građa računala / 18</div>
+            <h1>Zapisnik mjerenja</h1>
+            <p class="lead">Podatci prije zaključka</p>
+            <div class="worksheet">
+                <p>Ime i prezime: ____________________ &nbsp; Datum: ______________</p>
+                <p>CPU / GPU: __________________________________________________</p>
+                <p>RAM / pohrana: _______________________________________________</p>
+                <p>OS, alat i verzija: _____________________________________________</p>
+                <p>Uvjeti, postavke i trajanje: _____________________________________</p>
+                <p>Rezultati i jedinice: ___________________________________________</p>
+                <p>Pogreške i opažanja: __________________________________________</p>
+                <p>Zaključak i prijedlog dodatne provjere: __________________________</p>
+            </div>
+            <p>Zabilježi sve što je potrebno kako bi i drugi mogli ponoviti mjerenje.</p>
+        </section>
+        <section class="slide " id="s18" aria-label="Slajd 19: Provjeri razumijevanje">
+            <div class="eyebrow">Građa računala / 19</div>
+            <h1>Provjeri razumijevanje</h1>
+            <p class="lead">Odgovori pa otkrij objašnjenje</p>
+            <div class="quiz">
+                <p>1. Znači li 90. percentil da je CPU 90 % ispravan?</p>
+                <details>
+                    <summary>Odgovor</summary>Ne. Percentil opisuje položaj među usporedivim rezultatima.
+                </details>
+                <p>2. Koji alat iz ove lekcije pokrećemo s USB-a radi provjere RAM-a?</p>
+                <details>
+                    <summary>Odgovor</summary>MemTest86.
+                </details>
+                <p>3. Dokazuje li visok SEQ rezultat da je disk potpuno ispravan?</p>
+                <details>
+                    <summary>Odgovor</summary>Ne. To je mjerenje performansi, ne potpuna dijagnostika zdravlja.
+                </details>
+                <p>4. Smijemo li usporediti različite verzije i postavke CrystalDiskMarka kao jednake?</p>
+                <details>
+                    <summary>Odgovor</summary>Ne. Usporedbu treba napraviti u jednakim uvjetima i kompatibilnim
+                    verzijama.
+                </details>
+            </div>
+            <div class="source">Izvor sadržaja: <a href="https://crystalmark.info/en/software/crystaldiskmark/"
+                    target="_blank" rel="noopener">https://crystalmark.info/en/software/crystaldiskmark/</a></div>
+        </section>
+        <section class="slide " id="s19" aria-label="Slajd 20: Izvori i slike">
+            <div class="eyebrow">Građa računala / 20</div>
+            <h1>Izvori i slike</h1>
+            <p class="lead">Službena dokumentacija i izvori ilustracija</p>
+            <div class="sourcegrid">
+                <div>
+                    <h3>Izvori sadržaja</h3>
+                    <ul>
+                        <li><a href="https://www.userbenchmark.com/Faq/Test-fix-and-upgrade-your-PCs-performance/119"
+                                target="_blank" rel="noopener">UserBenchmark: službeni postupak i tumačenje</a></li>
+                        <li><a href="https://www.userbenchmark.com/Software" target="_blank"
+                                rel="noopener">UserBenchmark: obuhvat testova</a></li>
+                        <li><a href="https://www.ocbase.com/personal-features" target="_blank" rel="noopener">OCCT:
+                                testovi i mogućnosti</a></li>
+                        <li><a href="https://www.ocbase.com/download-personal" target="_blank" rel="noopener">OCCT:
+                                uvjeti osobne licence</a></li>
+                        <li><a href="https://www.memtest86.com/memtest86.html" target="_blank" rel="noopener">MemTest86:
+                                službeni opis</a></li>
+                        <li><a href="https://crystalmark.info/en/software/crystaldiskmark/" target="_blank"
+                                rel="noopener">CrystalDiskMark: značajke i upozorenja</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Izvori slika s interneta</h3>
+                    <ul>
+                        <li><a href="https://userbenchmark.en.lo4d.com/screenshots" target="_blank"
+                                rel="noopener">UserBenchmark – primjer sučelja — izvorna stranica</a></li>
+                        <li><a href="https://crystaldiskmark.en.lo4d.com/screenshots" target="_blank"
+                                rel="noopener">CrystalDiskMark – primjer rezultata — izvorna stranica</a></li>
+                        <li><a href="https://www.snapfiles.com/screenshots/occt.htm" target="_blank" rel="noopener">OCCT
+                                – primjer sučelja — izvorna stranica</a></li>
+                    </ul>
+                    <p>Snimke zaslona mogu prikazivati starija izdanja. Autorska prava pripadaju njihovim vlasnicima.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer><button onclick="go(current-1)" aria-label="Prethodni slajd">←</button><button onclick="go(current+1)"
+            aria-label="Sljedeći slajd">→</button><select id="jump" aria-label="Odabir slajda"
+            onchange="go(Number(this.value))">
+            <option value="0">1. Koliko je brzo tvoje računalo?</option>
+            <option value="1">2. Što ćemo naučiti?</option>
+            <option value="2">3. Brzina nije isto što i stabilnost</option>
+            <option value="3">4. Četiri alata u našoj radionici</option>
+            <option value="4">5. Priprema prije mjerenja</option>
+            <option value="5">6. UserBenchmark: što mjeri?</option>
+            <option value="6">7. UserBenchmark: preuzimanje i pokretanje</option>
+            <option value="7">8. UserBenchmark: tijek mjerenja</option>
+            <option value="8">9. Kako čitati rezultat?</option>
+            <option value="9">10. CPU i GPU: protumači prije zaključka</option>
+            <option value="10">11. RAM i pohrana: različite vrste brzine</option>
+            <option value="11">12. OCCT: testiranje procesora</option>
+            <option value="12">13. MemTest86: traženje pogrešaka RAM-a</option>
+            <option value="13">14. CrystalDiskMark: testiranje pohrane</option>
+            <option value="14">15. Kako čitati CrystalDiskMark?</option>
+            <option value="15">16. Primjer: brojevi traže kontekst</option>
+            <option value="16">17. Praktična vježba u paru</option>
+            <option value="17">18. Zapisnik mjerenja</option>
+            <option value="18">19. Provjeri razumijevanje</option>
+            <option value="19">20. Izvori i slike</option>
+        </select><button onclick="toggleOverview()">Pregled svih</button><button onclick="window.print()">Ispis /
+            PDF</button><span id="counter"></span></footer>
+    <div id="progress"></div>
+    <dialog><button onclick="this.parentElement.close()">Zatvori</button><br><img id="big" alt="Povećana slika">
+    </dialog>
+    <script>let current = 0; const slides = [...document.querySelectorAll('.slide')]; function go(n) { current = Math.max(0, Math.min(slides.length - 1, n)); slides.forEach((s, i) => s.classList.toggle('active', i === current)); document.querySelector('#jump').value = current; document.querySelector('#counter').textContent = (current + 1) + ' / ' + slides.length; document.querySelector('#progress').style.width = ((current + 1) / slides.length * 100) + '%'; location.hash = 'slajd-' + (current + 1); window.scrollTo(0, 0) } function toggleOverview() { document.body.classList.toggle('overview') } document.addEventListener('keydown', e => { if (['INPUT', 'SELECT', 'TEXTAREA', 'SUMMARY', 'BUTTON', 'A'].includes(document.activeElement.tagName) || document.querySelector('dialog').open) return; if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(current + 1) } if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(current - 1) } if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1); if (e.key.toLowerCase() === 'f') fullscreen() }); function fullscreen() { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.() } function zoom(img) { document.querySelector('#big').src = img.src; document.querySelector('#big').alt = img.alt; document.querySelector('dialog').showModal() } function printWorksheet() { document.body.classList.add('worksheet-only'); window.print(); document.body.classList.remove('worksheet-only') } window.addEventListener('afterprint', () => document.body.classList.remove('worksheet-only')); go((parseInt(location.hash.replace('#slajd-', '')) || 1) - 1);</script>
+</body>
+
+</html>
