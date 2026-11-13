@@ -171,6 +171,10 @@
             background: #e4efff
         }
 
+        .btn-close {
+            margin-bottom: 1rem;
+        }
+
         #progress {
             height: 4px;
             background: #516bef;
@@ -519,8 +523,7 @@
                         alt="UserBenchmark – primjer sučelja" loading="lazy" onclick="zoom(this)"
                         onerror="this.style.display='none';this.parentElement.querySelector('.credit').prepend('Slika nije dostupna. ')">
                     <div class="credit">Ilustracija sučelja · <a href="https://userbenchmark.en.lo4d.com/screenshots"
-                            target="_blank" rel="noopener">Izvor slike: UserBenchmark – primjer sučelja</a><br>Klik na
-                        sliku za povećanje.</div>
+                            target="_blank" rel="noopener">Izvor slike: UserBenchmark – primjer sučelja</a></div>
                 </div>
             </div>
             <div class="source">Izvor sadržaja: <a href="https://www.userbenchmark.com/Software" target="_blank"
@@ -662,8 +665,7 @@
                         alt="OCCT – primjer sučelja" loading="lazy" onclick="zoom(this)"
                         onerror="this.style.display='none';this.parentElement.querySelector('.credit').prepend('Slika nije dostupna. ')">
                     <div class="credit">Ilustracija sučelja · <a href="https://www.snapfiles.com/screenshots/occt.htm"
-                            target="_blank" rel="noopener">Izvor slike: OCCT – primjer sučelja</a><br>Klik na sliku za
-                        povećanje.</div>
+                            target="_blank" rel="noopener">Izvor slike: OCCT – primjer sučelja</a></div>
                 </div>
             </div>
             <div class="source">Izvor sadržaja: <a href="https://www.ocbase.com/personal-features" target="_blank"
@@ -710,8 +712,7 @@
                         alt="CrystalDiskMark – primjer rezultata" loading="lazy" onclick="zoom(this)"
                         onerror="this.style.display='none';this.parentElement.querySelector('.credit').prepend('Slika nije dostupna. ')">
                     <div class="credit">Ilustracija sučelja · <a href="https://crystaldiskmark.en.lo4d.com/screenshots"
-                            target="_blank" rel="noopener">Izvor slike: CrystalDiskMark – primjer rezultata</a><br>Klik
-                        na sliku za povećanje.</div>
+                            target="_blank" rel="noopener">Izvor slike: CrystalDiskMark – primjer rezultata</a></div>
                 </div>
             </div>
             <div class="source">Izvor sadržaja: <a href="https://crystalmark.info/en/software/crystaldiskmark/"
@@ -910,7 +911,7 @@
         </select><button onclick="toggleOverview()">Pregled svih</button><button onclick="window.print()">Ispis /
             PDF</button><span id="counter"></span></footer>
     <div id="progress"></div>
-    <dialog><button onclick="this.parentElement.close()">Zatvori</button><br><img id="big" alt="Povećana slika">
+    <dialog><button class="btn-close" onclick="this.parentElement.close()">Zatvori</button><br><img id="big" alt="Povećana slika">
     </dialog>
     <script>let current = 0; const slides = [...document.querySelectorAll('.slide')]; function go(n) { current = Math.max(0, Math.min(slides.length - 1, n)); slides.forEach((s, i) => s.classList.toggle('active', i === current)); document.querySelector('#jump').value = current; document.querySelector('#counter').textContent = (current + 1) + ' / ' + slides.length; document.querySelector('#progress').style.width = ((current + 1) / slides.length * 100) + '%'; location.hash = 'slajd-' + (current + 1); window.scrollTo(0, 0) } function toggleOverview() { document.body.classList.toggle('overview') } document.addEventListener('keydown', e => { if (['INPUT', 'SELECT', 'TEXTAREA', 'SUMMARY', 'BUTTON', 'A'].includes(document.activeElement.tagName) || document.querySelector('dialog').open) return; if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(current + 1) } if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(current - 1) } if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1); if (e.key.toLowerCase() === 'f') fullscreen() }); function fullscreen() { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.() } function zoom(img) { document.querySelector('#big').src = img.src; document.querySelector('#big').alt = img.alt; document.querySelector('dialog').showModal() } function printWorksheet() { document.body.classList.add('worksheet-only'); window.print(); document.body.classList.remove('worksheet-only') } window.addEventListener('afterprint', () => document.body.classList.remove('worksheet-only')); go((parseInt(location.hash.replace('#slajd-', '')) || 1) - 1);</script>
 </body>
